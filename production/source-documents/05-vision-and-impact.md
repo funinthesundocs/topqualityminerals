@@ -46,7 +46,7 @@ This is not charity. It is the natural byproduct of industrial development done 
 
 GMC's current workforce includes mining laborers, road mappers, guides, stockyard personnel, and property custodians -- many drawn from subsistence livelihoods with no prior industrial experience. A formal mineral processing operation introduces structured training programs: equipment operation, safety protocols, quality control, environmental monitoring, and maintenance skills aligned with ISO standards. These programs transition subsistence workers into skilled industrial professionals whose capabilities are portable and career-defining.
 
-ACI's own workforce development track record -- 91% local hiring, 4,000+ skilled team members deployed nationwide, three consecutive years as a Best Employer -- provides the institutional knowledge to design and deliver these programs. The partnership does not just hire people. It builds the skilled workforce that Davao Oriental has never had.
+ACI's own workforce development track record -- 91% local hiring, 4,000+ skilled team members deployed nationwide (as of October 2025, per Stevie Awards submission), three consecutive years as a Best Employer -- provides the institutional knowledge to design and deliver these programs. The partnership does not just hire people. It builds the skilled workforce that Davao Oriental has never had.
 
 ---
 

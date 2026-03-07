@@ -23,7 +23,7 @@ The FTAA imposes a punitive 60-40 revenue split favoring the government — desi
 
 The 25+25 year MPSA term provides multi-generational security — a 50-year horizon that matches Aboitiz's century-long institutional planning culture and ACI's demonstrated appetite for decade-long engagements (13+ years at THPAL and counting).
 
-**The existing MPSA — MPSA No. 251(A)-2007-XI — is already in place**, held by Dabawenyo Minerals Corporation (DMC), covering 5,906.67 hectares in Mati City and Lupon, Davao Oriental. GMC is the authorized operator, approved by MGB Central Office in May 2022. The mineral agreement does not need to be obtained — it needs to be developed.
+**The existing MPSA — MPSA No. 251(A)-2007-XI — is already in place**, held by Dabawenyo Minerals Corporation (DMC), covering 5,906.67 hectares in Tarragona and Mati City, Davao Oriental. GMC is the authorized operator, approved by MGB Central Office in May 2022. The mineral agreement does not need to be obtained — it needs to be developed.
 
 ---
 
@@ -85,7 +85,7 @@ The partnership is structured as an ecosystem, not a single entity. Each Aboitiz
 ```
 DABAWENYO MINERALS CORPORATION (DMC)
 │   MPSA No. 251(A)-2007-XI holder
-│   5,906.67 hectares — Mati City & Lupon, Davao Oriental
+│   5,906.67 hectares — Tarragona & Mati City, Davao Oriental
 │   Commodities: Molybdenum, Copper, Gold, associated minerals
 │
 ├── GENLUICHING MINING CORPORATION (GMC)
@@ -324,7 +324,7 @@ This meeting is not a request for a signed agreement. It is a proposal for a str
 A mutual commitment to proceed with:
 
 1. **Due diligence** — Independent review of geological data, legal standing, corporate structure, and regulatory status
-2. **Site visit** — Physical inspection of the MPSA area in Mati City and Lupon, Davao Oriental
+2. **Site visit** — Physical inspection of the MPSA area in Tarragona and Mati City, Davao Oriental
 3. **Joint feasibility assessment** — Scoping study to determine whether a full bankable feasibility study is warranted
 
 ### What This Requires

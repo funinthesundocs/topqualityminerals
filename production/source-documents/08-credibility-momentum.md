@@ -39,7 +39,7 @@ This is the core asset. A government-issued Mineral Production Sharing Agreement
 | **MPSA Holder** | Dabawenyo Minerals Corporation (DMC) |
 | **Authorized Operator** | Genluiching Mining Corporation (approved May 2, 2022, MGB Central Office) |
 | **Area** | 5,906.67 hectares |
-| **Location** | Mati City and Lupon, Davao Oriental, Region XI |
+| **Location** | Tarragona and Mati City, Davao Oriental, Region XI |
 | **Commodities** | Molybdenum, copper, gold, and associated mineral deposits |
 | **Date Approved** | July 28, 2007 |
 | **Expiry** | July 28, 2032 (25-year initial term) |

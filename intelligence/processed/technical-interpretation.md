@@ -328,7 +328,7 @@ Two distinct ore samples — copper and iron:
 |-----|-----------|-----------|----------|-------------|
 | POSCO (Korea) | 64.1-67.3% | — | — | Confirms high-grade Fe |
 | Beijing BGRIMM | — | 15-21% | — | Confirms high Cu zones |
-| Intertek (136 samples) | up to 56.06% | — | — | Confirms Fe distribution |
+| Intertek (136 samples) | 0.16-56.06% (range) | — | — | Confirms widespread Fe distribution; highest grades in mineralization zones |
 | Davao Analytical (Assay3) | 8.4-53.4% | 0.03-39.5% | 0.21-4.4 g/t | Wide range confirms zoned deposit |
 
 The Assay3 results are internally consistent and corroborate findings from other laboratories. The deposit shows clear zonation: high-grade Fe zones (>50% Fe), high-grade Cu zones (>15% Cu), and gold as a secondary commodity throughout (0.2-4.4 g/t).
@@ -340,7 +340,7 @@ The Assay3 results are internally consistent and corroborate findings from other
 ### Map1.jpeg — MPSA Boundary Map
 
 - **Type**: Topographic/cadastral boundary map
-- **Coverage**: MPSA 251(A)-2007-XI concession area, Mati City and Lupon, Davao Oriental
+- **Coverage**: MPSA 251(A)-2007-XI concession area, Tarragona and Mati City, Davao Oriental
 - **Key features**: Shows the 5,906.67 hectare concession boundary overlaid on topographic base map. Coordinates in Philippine Transverse Mercator (PTM). Mountain terrain with elevations ranging approximately 200-800m ASL. River systems visible throughout the concession area. Multiple barangay boundaries marked.
 - **Readable text**: MPSA number, municipality names, coordinate grids
 - **Gemini needed**: Fine text along boundary vertices and coordinate labels partially illegible at current resolution

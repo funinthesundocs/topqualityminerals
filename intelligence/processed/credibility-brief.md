@@ -37,7 +37,7 @@
 - **MPSA Holder**: Dabawenyo Minerals Corporation (DMC), Chairman: Alcid M. Sayre
 - **Authorized Operator**: Genluiching Mining Corporation (approved May 2, 2022 by MGB Central Office)
 - **Area**: 5,906.67 hectares
-- **Location**: Mati City and Lupon (originally Tarragona), Davao Oriental, Region XI
+- **Location**: Tarragona and Mati City, Davao Oriental, Region XI (per MPSA Brief Summary)
 - **Commodities**: Molybdenum, copper, gold, and associated mineral deposits
 - **Approved**: July 28, 2007
 - **Expires**: July 28, 2032

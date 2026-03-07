@@ -91,7 +91,7 @@ Extracted from the Aboitiz Construction Company Profile v2025.pdf:
 **Facts-forward, achievement-oriented through metrics.** ACI's primary persuasion mechanism is quantified achievement:
 - 800+ completed projects
 - 3,400+ skilled workforce
-- 25M+ safe manhours without LTI
+- 25M+ safe manhours without LTI (as of December 2024, per company profile)
 - 50 years of track record
 - 3.29/4.00 client satisfaction
 
@@ -208,7 +208,7 @@ These are our equivalents of ACI's bold "800+ / 3,400+ / 25M" callouts. Each fol
 |--------|---------|--------|
 | **67.31% Fe** | iron ore grade (POSCO-verified) | POSCO laboratory assay results |
 | **39.5% Cu** | copper content | Independent laboratory analysis |
-| **4.4 g/t Au** | gold grade | Independent laboratory analysis |
+| **4.4 g/t Au** | gold by-product in copper veins | Targeted copper vein sampling (Davao Analytical, 2025) |
 
 ### Geological Confidence
 
