@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #22D3EE;
+  --color-primary-muted: #22D3EE4D;
+  --color-primary-border: #22D3EE80;
+}
+
+body {
+  background: #000000;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Agent pulse animation */
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 8px var(--color-primary-muted); }
+  50% { box-shadow: 0 0 16px var(--color-primary-muted); }
+}
+
+/* Page transition */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 200ms ease-out;
+}
