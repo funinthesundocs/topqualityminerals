@@ -463,3 +463,119 @@ The Claver/THPAL relationship proves five things that make our proposal credible
 22. **Sebastian was at Claver in January.** The same person who may be in our meeting was just at THPAL. Reference the Claver visit naturally — it shows we've done our homework and understand what matters to them.
 
 23. **The Coral Bay opportunity.** If appropriate, signal awareness that CBNC in Palawan represents untapped potential. Shows strategic thinking beyond the immediate deal.
+
+---
+
+## Section 12: Great Transformation & Strategic Fit
+
+*Source: "The Great Transformation & Where Mining Fits: Aboitiz Group Strategic Analysis" — Perplexity Deep Research, 33 citations*
+
+### The Great Transformation
+
+The GT is CEO Sabin Aboitiz's signature initiative — a ₱380 billion (~$7B) seven-year capital deployment program launched in 2020 to transform a 100-year-old Filipino conglomerate into the Philippines' first "techglomerate." It was catalyzed by COVID-19 crashing power demand (AEV's core business), which exposed dangerous revenue concentration.
+
+**Three pillars:**
+1. Portfolio diversification — enter new sectors to reduce power dependence
+2. Technology integration — deploy data science/AI across all business units via Aboitiz Data Innovation (ADI)
+3. Culture transformation — instill startup culture in a century-old family conglomerate
+
+**Six sectors today:** Power, Banking/Financial Services (UnionBank), Food & Beverage (Coca-Cola PH), Infrastructure (airports, towers, data centers), Real Estate, and Data/Technology.
+
+### Capital Deployment Scale
+
+- **₱105B capex budget in 2025** — 37% increase over 2024
+- ₱78B to power alone (RE expansion, LNG, BESS)
+- ₱16B to infrastructure (economic estates, telecom towers)
+- AEV core net income: ₱25.5B (FY 2025)
+- AboitizPower EBITDA: ₱79.6B (+9% YoY)
+- Revenue (TTM Sep 2025): ₱309.1B
+
+### Major GT Deals Since 2020
+
+| Year | Deal | Value |
+|------|------|-------|
+| 2021 | JERA acquires 27% of AboitizPower | $1.58B |
+| 2022 | Mactan-Cebu International Airport | ₱25B |
+| 2024 | 40% stake in Coca-Cola Beverages Philippines | ₱40B (~$720M) |
+| 2025 | Chromite Gas Holdings / LNG mega-deal (with Meralco + SMC) | $3.3B total |
+| 2025 | Laguindingan International Airport (30-year concession) | ₱12.75B |
+| 2025 | BlackRock/GIP acquires 40% of Aboitiz InfraCapital | ₱13.7B |
+
+### The Mining Gap — Most Conspicuous Absence
+
+**Aboitiz has NEVER owned a mining asset in 100+ years.** No equity stake, no mineral concession, no resource extraction business. Every other major Philippine conglomerate touches mining:
+
+| Conglomerate | Mining/Resources |
+|-------------|-----------------|
+| San Miguel Corp. | Largest cement producer; quarries |
+| DMCI Holdings | DMCI Mining (nickel, copper); Semirara (coal) |
+| Ayala Corp. | AC Energy RE; EV manufacturing deal |
+| Lopez Group | First Gen (natural gas) |
+| **Aboitiz Group** | **None — only construction services for mining clients** |
+
+The closest adjacency: Republic Cement's limestone quarries (CRH-Aboitiz JV) and ACI's maintenance contracts at THPAL. Neither constitutes mining ownership.
+
+### But the Platform Is Already Built
+
+Every piece of infrastructure needed for mineral processing already exists in the Aboitiz ecosystem:
+
+| Capability | Entity | Proven At |
+|-----------|--------|-----------|
+| Build processing plants | Aboitiz Construction (ACI) | THPAL, CD Processing (₱583M copper plant) |
+| Maintain processing plants | ACI Plus (IMS) | THPAL (13+ years), Republic Cement |
+| Supply energy | AboitizPower | 9,200 MW target portfolio; RE, LNG, coal, hydro |
+| Infrastructure (ports, roads, water) | Aboitiz InfraCapital (AIC) | Mactan-Cebu Airport, Apo Agua, economic estates |
+| Data science & AI | Aboitiz Data Innovation (ADI) | EquiMax remote monitoring at THPAL |
+| Financial backing | UnionBank + AEV balance sheet | BlackRock/GIP lending global credibility |
+| Community operations | ACI (91% local hiring) | Top taxpayer in Claver, 1000 local jobs at THPAL |
+
+The gap between "Aboitiz has never been in mining" and "Aboitiz enters mineral processing" is much smaller than it appears from the outside. The platform is built — what's missing is the specific deal.
+
+### The Strategic Rationale: Processing, Not Extraction
+
+The argument is NOT for Aboitiz to enter mining extraction (high political, environmental, and reputational risk in the Philippines). The argument is for **mineral processing and downstream beneficiation** — the middle of the value chain between raw ore and finished product.
+
+This aligns with:
+- **The techglomerate thesis** — technology-driven, data-enabled, demonstrably modern
+- **Existing capabilities** — construction, maintenance, energy, infrastructure, technology
+- **Recurring revenue model** — shift from project-based to annuity-style earnings (exactly what the GT is pursuing)
+- **Manageable risk** — not greenfield exploration but processing with proven technology and offtake
+- **Nation-building language** — Sabin's signature phrase; mineral processing creates local jobs and value-add
+
+### The National Policy Tailwind
+
+The Philippine government under Marcos is actively pushing vertical integration of the minerals value chain:
+
+- **Marcos himself**: "We want to go beyond just the phase of extracting the minerals and to actually go vertically integrate that entire activity all the way down to actual battery production"
+- **US-Philippines Critical Minerals MOU**: Signed February 2026 — cooperation on critical minerals supply chains
+- **BOI pioneer status**: Available for qualifying mineral processing investments (precedent: CD Processing copper plant)
+- **Philippine Trade & Industry**: Actively promoting nickel and copper processing opportunities to international investors
+
+A major Filipino conglomerate entering mineral processing aligns perfectly with government policy and could attract preferential treatment.
+
+### What the Meeting Needs to Convey
+
+The Aboitiz Group doesn't need to be convinced that mining is good. It needs to see a specific opportunity that:
+
+1. Fits the techglomerate thesis
+2. Leverages existing ecosystem capabilities
+3. Generates recurring revenue
+4. Carries manageable risk (processing, not extraction)
+5. Supports nation-building
+6. Can be championed internally by Sebastian Aboitiz and Antonio Peñalver
+
+### Presentation Strategy Additions
+
+24. **Frame the partnership as the GT's natural next frontier.** They've done power, banking, food, infrastructure, real estate, technology. Natural resources is the conspicuous gap. GMC fills it — not as mining, but as mineral processing.
+
+25. **Never say "mining investment" — say "mineral processing partnership."** Extraction carries political and reputational baggage. Processing is where the value-add happens. This is the framing that aligns with government policy, the techglomerate thesis, and nation-building language.
+
+26. **Reference the ₱105B capex deployment.** They are spending aggressively. ₱105B in 2025 alone, up 37%. They are not sitting on capital — they are looking for the right places to deploy it. GMC is a deployment opportunity.
+
+27. **Use the Marcos critical minerals quote.** The President of the Philippines wants vertical integration of the minerals value chain. A GMC partnership delivers exactly that. This is government-aligned.
+
+28. **The US-Philippines MOU is 3 weeks old.** The critical minerals supply chain MOU was signed February 2026. This is not historical policy — it is current national priority. GMC is positioned at the intersection of this moment.
+
+29. **Show the ecosystem map.** ACI builds, ACI Plus maintains, AboitizPower supplies energy, AIC provides infrastructure, ADI brings data science. Draw the picture. Every arrow already exists. The only missing node is the mineral processing asset itself.
+
+30. **The "missing deal" framing.** The platform is built. The capabilities are proven. The policy environment is favorable. The leadership team (Sebastian, Peñalver) is already engaged with mining clients. What's missing is not capability — it's the specific opportunity. GMC is that opportunity.
