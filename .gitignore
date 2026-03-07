@@ -1,6 +1,10 @@
+node_modules/
+.next/
 .env
 .env.local
-.env.*.local
-.mcp.json
-node_modules/
+dist/
+build/
+*.log
 .DS_Store
+intelligence/raw/
+production/outputs/
