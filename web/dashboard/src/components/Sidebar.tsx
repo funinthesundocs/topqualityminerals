@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Search, FileText, Users, Factory,
   Package, Globe, ShieldCheck, Settings, Activity,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Brain
 } from 'lucide-react'
 
 const NAV_ITEMS = {
@@ -19,6 +19,7 @@ const NAV_ITEMS = {
     { href: '/deliverables', icon: Package, label: 'Deliverables' },
     { href: '/presentation', icon: Globe, label: 'Presentation Site' },
     { href: '/verification', icon: ShieldCheck, label: 'Verification' },
+    { href: '/agent', icon: Brain, label: 'AI Agent' },
   ],
   system: [
     { href: '/settings', icon: Settings, label: 'Settings' },
