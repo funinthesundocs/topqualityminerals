@@ -180,3 +180,43 @@ For a 6,000-acre Southern Mindanao project:
 7. **Address community risk structurally**: SDMP funding, 91% local hiring, infrastructure contributions, genuine indigenous partnership — not afterthoughts but foundational deal terms
 
 The MPP pathway combined with the MPSA structure and ACI's proven community model represents the lowest-risk, highest-alignment entry point for an Aboitiz partnership.
+
+---
+
+## GMC Permit Status
+
+*Source: 7 permit/regulatory documents processed*
+
+### Summary Table
+
+| Document | Type | Issuing Authority | Reg/Permit No. | Issued | Expires | Status |
+|----------|------|-------------------|----------------|--------|---------|--------|
+| SEC Certificate | Incorporation | SEC | CS201211690 | 22 Jun 2012 | Perpetual | **Active** |
+| Mati Business Permit | Mayor's Permit | City of Mati | 2026-1102509000-2418 | 05 Feb 2026 | 31 Dec 2026 | **Active** |
+| Makati Business Permit | Mayor's Permit | City of Makati | 05674 | 19 Jan 2026 | 31 Dec 2026 | **Active** |
+| AFS (FY2024) | Financial filing | SEC/BIR | OST10211202683935246 | 11 Feb 2026 | N/A | **Filed** |
+| GIS 2026 | Annual filing | SEC | OST10211202683934871 | 11 Feb 2026 | N/A | **Filed** |
+| BOC Registration | Customs/Exporter | Bureau of Customs | EX0001420577 | 12 Feb 2026 | 12 Feb 2027 | **Active** |
+| MPSA 251(A)-2007-XI | Mineral Agreement | DENR-MGB | MPSA No. 251(A)-2007-XI | 28 Jul 2007 | 28 Jul 2032 | **Active — Under Exploration** |
+
+### Key Details
+
+- **SEC Registration**: CS201211690, TIN 008-311-017, Stock Corporation, Industry C10990
+- **Mati Office**: YKG Hotel National Highway Dahican, City of Mati — "Mining Office" designation, 6 employees, with Barangay Dahican clearance
+- **Makati Office**: Unit 1411, Ayala Tower One — head office, sanitary permit notes "No Operation", community tax shows P0.00 gross receipts (administrative only)
+- **BOC**: EX prefix = exporter registration for "Other Metallic Ore Mining N.E.C." — new as of Feb 2026
+- **AFS/GIS**: Filed timely (Feb 2026) but only receipt confirmations in file — actual financial statements not provided
+- **MPSA**: Confirmed in official MGB registry (MRMS Report 002A, Sep 30, 2025) — GMC listed as authorized operator, Dabawenyo Minerals Corp as holder
+
+### Cross-Document Consistency: VERIFIED
+
+All documents show consistent: company name, SEC reg number, TIN, Makati address (1411 Ayala Tower One), and Jet P. Tupas as President/CEO.
+
+### Concerns for Due Diligence
+
+1. MPSA has been in exploration for **18 years** (since 2007) with no DMPF filed/approved
+2. MPSA expires **July 28, 2032** — 6 years remaining on first term
+3. Makati office confirms **P0 gross receipts** — no revenue-generating activity
+4. Mati office has only **6 employees** for a 5,906-hectare concession
+5. BOC exporter registration is new (Feb 2026) despite no apparent production
+6. GMC is the **operator, not the MPSA holder** — rights are derivative from DMC relationship
