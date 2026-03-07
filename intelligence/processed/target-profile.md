@@ -356,3 +356,110 @@ Multiple indicators that ACI is actively seeking new partnerships:
 15. **The Claver/Surigao connection.** They already operate in Surigao del Norte. They already know the municipal government. They're already a top taxpayer there. GMC's asset is in their backyard.
 
 16. **The ₱583M copper plant precedent.** They've already built a mineral processing facility. This isn't theoretical — they have executed exactly this type of project before.
+
+---
+
+## Section 11: The Claver Precedent — Strategic Linchpin
+
+*Source: "The Claver Connection: THPAL, Aboitiz Construction & the Mineral Processing Linchpin" — Perplexity Deep Research, 29 citations*
+
+### The Core Story
+
+Aboitiz Construction **built** the Taganito HPAL Nickel Corporation (THPAL) plant in Claver, Surigao del Norte starting September 2012 and has **continuously maintained it for 13+ years**. This is not a vendor relationship — it is the longest, deepest, and most strategically significant client engagement in the company's history. They didn't just win a maintenance contract; they built the plant and never left.
+
+### THPAL: The Facility
+
+- **Investment**: $1.7 billion facility (₱5.64B in additional mining investments)
+- **Ownership**: Sumitomo Metal Mining 62.5% (Japan) / Nickel Asia Corp 22.5% (Philippines) / Mitsui & Co. 15% (Japan)
+- **Technology**: High-Pressure Acid Leach (HPAL) — extracts nickel and cobalt from low-grade laterite ore
+- **Product**: Nickel-cobalt mixed sulfides → shipped to SMM refineries in Japan → battery-grade nickel sulfate for EV cathodes
+- **2023 gross output**: ₱30.47 billion (~$547M) — one of the most economically significant single industrial facilities in Mindanao
+- **Design life**: 30 years from 2013 = operations through ~2043 (17+ years remaining)
+- **Ore reserves**: 156 million WMT of nickeliferous laterite — feedstock security for decades
+- **Supply chain position**: One of the few non-Indonesian, non-Chinese sources of battery-grade nickel. SMM supplies Panasonic, which supplies Tesla.
+
+### The Build-Then-Maintain Model
+
+This is the proof of concept for Aboitiz Construction's entire strategic direction:
+
+| Phase | Timeline | What Happened |
+|-------|----------|---------------|
+| Construction | Sep 2012–2013 | ACI built the THPAL plant as main contractor |
+| Transition | ~2013 | Plant achieves commercial ops; ACI transitions to maintenance |
+| Maintenance | 2013–2023 | Continuous industrial maintenance; 10M safe man-hours achieved |
+| IMS Launch | 2023 | THPAL contract becomes the anchor of the new IMS business segment |
+| Expansion | ~2024 | New five-year shutdown works contract secured |
+| Leadership Signal | Jan 2026 | President, Executive Director, and Sebastian Aboitiz all visit Claver |
+
+The model: build the facility, embed your team, transition to recurring maintenance revenue, expand scope over time, never leave. **This is exactly what we should propose for GMC.**
+
+### The IMS Business Segment — Born from THPAL
+
+The Industrial Maintenance Services segment was formally launched in 2023 with the THPAL contract as its anchor:
+
+- **2024 IMS Revenue**: ₱650 million
+- **2026 IMS Revenue Target**: ₱1 billion (~54% growth over 2 years)
+- **New maintenance clients secured (2023–2024)**: 14
+- **THPAL is almost certainly the single largest revenue contributor** within IMS
+
+Current scope at THPAL: preventive maintenance, instrumentation, electrical works, condition monitoring (predictive), shutdown works (turnarounds), mechanical works. They deployed their proprietary **EquiMax** digital monitoring tool — 30% increase in machine control efficiency.
+
+### The January 2026 Visit — What It Signals
+
+Sebastian Aboitiz (Business Development Manager), Antonio Peñalver (Executive Director), and Anton Perdices (President & Chairman) all visited Claver in January 2026. This is the top three leaders at one client site simultaneously.
+
+- Sebastian's title is **Business Development** — his presence signals new business origination, not just contract management
+- Possible scopes: expanded maintenance, new processing facility construction, infrastructure development in the Taganito Special Economic Zone
+- Having a fifth-generation Aboitiz family member present sends a message to Sumitomo/Nickel Asia: this relationship has family-level backing
+
+### Workforce & Community Lock-In
+
+- ~1,000 local jobs created in Claver
+- 10M+ safe man-hours at THPAL alone (27M across all sites)
+- Zero lost time injuries
+- Top business taxpayer in Claver for 3+ consecutive years (2021–2023)
+- Community programs: Brigada Eskwela, tree planting, disaster preparedness
+- **This is social license to operate** — the kind that takes years to build and competitors cannot replicate
+
+### Other Mineral Processing Track Record
+
+Beyond THPAL, confirmed mineral processing/heavy industry clients:
+
+- **CD Processing Ltd. (₱583M copper ore sorting plant)** at Carmen Copper Corporation, Toledo City, Cebu — state-of-the-art magnetic resonance analyzer technology, BOI pioneer project
+- **Republic Cement (RCBM)** — 3-year maintenance contract across 3 cement plants (secured July 2025)
+- **CEMEX Philippines** — kiln commissioning at Antipolo City plant
+- **AP Renewables** — 3-year geothermal power plant maintenance (Mak-Ban + Tiwi)
+- **Historical**: Petron, Pilipinas Shell refinery, JGC petrochemical, LNG module fabrication
+
+### Expansion Runway from THPAL
+
+- THPAL added scandium recovery (2019) and chromite recovery (2021) — each new product line = additional maintenance scope
+- **Coral Bay Nickel Corporation (CBNC)** in Palawan — sister HPAL plant (24,000 MT Ni/year), same ownership consortium, ACI does NOT currently serve it — clear expansion opportunity
+- **SMM's Pomalaa HPAL Project in Indonesia** — at Definitive Feasibility Study stage — potential international pathway
+- SMM's stated goal: "become the World Leader in the Non-Ferrous Metals Industry" by 2030
+
+### Why This Is the Most Important Intelligence We Have
+
+The Claver/THPAL relationship proves five things that make our proposal credible:
+
+1. **The model works.** Build-then-maintain generates 13+ years of recurring revenue with deep client lock-in.
+2. **Mineral processing maintenance is a growth business.** Zero to ₱650M in one year as a formal segment, targeting ₱1B.
+3. **The safety record is a competitive moat.** 27M safe man-hours, zero LTIs — non-negotiable for operators of $1.7B facilities.
+4. **Technology differentiates.** EquiMax predictive maintenance aligns with the "techglomerate" vision.
+5. **Community impact legitimizes.** 1,000 local jobs, top taxpayer, social license — impossible for competitors to replicate quickly.
+
+### Presentation Strategy Additions
+
+17. **THPAL is the proof of concept — lead with it.** Everything we're proposing, they've already done. Build a plant, stay for 13 years, create a ₱650M business segment. GMC is the next THPAL.
+
+18. **Mirror the build-then-maintain language explicitly.** Use their exact framing. They invented this model at Claver. Show them we understand it and are proposing the same structure.
+
+19. **The $1.7B credibility signal.** They maintain a $1.7 billion facility for Sumitomo Metal Mining — one of the world's largest non-ferrous metal companies. This is not a small contractor. This is a company trusted with billion-dollar assets.
+
+20. **The IMS revenue gap is our opening.** ₱650M actual, ₱1B target. A GMC partnership with recurring maintenance revenue could be the contract that closes that gap. Make them see GMC as the path to ₱1B.
+
+21. **The EV supply chain narrative.** THPAL produces battery-grade nickel for Tesla's supply chain. Position GMC within the same macro trend — critical minerals, energy transition, supply chain sovereignty.
+
+22. **Sebastian was at Claver in January.** The same person who may be in our meeting was just at THPAL. Reference the Claver visit naturally — it shows we've done our homework and understand what matters to them.
+
+23. **The Coral Bay opportunity.** If appropriate, signal awareness that CBNC in Palawan represents untapped potential. Shows strategic thinking beyond the immediate deal.
