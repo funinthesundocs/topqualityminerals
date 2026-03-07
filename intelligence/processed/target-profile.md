@@ -216,3 +216,143 @@ ACI has deep operational history in Mindanao and Visayas — exactly where GMC's
 9. **Long-term partnership framing.** Their Taganito relationship is 12+ years. Frame GMC as a multi-decade partnership, not a project.
 
 10. **Verify "Sabin" vs "Sabina."** The deck says "Sabin M. Aboitiz." Confirm exact name and gender before the meeting. Getting a decision-maker's name wrong is fatal.
+
+---
+
+## 10. Operational Profile & Growth Trajectory
+
+**Source:** Aboitiz Construction, Inc. — Complete Operational Profile & Growth Trajectory (2025–2026) (Perplexity Deep Research report, 41 cited sources)
+**Processed:** 2026-03-07
+**Confidence:** HIGH (cross-referenced against 41 public sources including SEC filings, press releases, Stevie Award submission, LinkedIn, and industry publications)
+
+### PCAB Quadruple A — What It Actually Means
+
+ACI achieved PCAB Quadruple A accreditation in **December 2023**. This matters more than it sounds:
+- Only **72 contractors in the entire Philippines** hold AAAA status
+- AAAA Platinum tier = **no project cost ceiling** — can bid on any government or private project of any scale
+- AAAA Gold minimum thresholds: ₱5B (~$90M) for vertical, ₱3B (~$54M) for horizontal projects
+- Requirements include "exceptional competence, credibility, and financial capacity"
+
+**IMPLICATION:** GMC's mining development is a large-scale infrastructure project. ACI is one of only 72 companies in the Philippines legally qualified to build it at scale. This isn't a pitch — it's a capability match.
+
+### Four Business Segments
+
+| Segment | Description | Relevance to GMC |
+|---------|-------------|------------------|
+| **Heavy Industries** | Power, oil & gas, petrochemical, cement, **mining** | **DIRECT** — mining is a named core competency |
+| **Light Industries** | Food manufacturing, warehousing, shipbuilding | Moderate — processing facility construction |
+| **Infrastructure** | Land development, marine works, substations, roads | **HIGH** — site development, port access, power |
+| **Industrial Maintenance (IMS)** | Rebranded as **ACI Plus** in 2025–2026 | **CRITICAL** — build-then-maintain is their strategic playbook |
+
+### Growth Trajectory — The Numbers That Matter
+
+| Metric | Value | What It Signals |
+|--------|-------|-----------------|
+| Revenue growth (2024) | **+45.53%** | Company on a rocket trajectory |
+| Total asset growth (2024) | **+28.71%** | Investing heavily in capacity |
+| Awarded contracts (since 2023) | **+500%** | Massive new business pipeline |
+| IMS revenue (2024) | **₱650 million** | Maintenance business already substantial |
+| IMS revenue target (2026) | **₱1 billion** | Aggressive growth goal — need new clients |
+| New IMS clients (2023–2024) | **14** | Actively prospecting for maintenance contracts |
+| Workforce | **4,000+** | Scale to deploy |
+| Local hiring rate | **91%** | Community integration — critical for mining |
+| Completed projects (lifetime) | **800+** | Proven execution at scale |
+| On-time completion | **82%** | Respectable for heavy construction |
+| Projects within target margins | **94%** | Financial discipline |
+| Client satisfaction | **100%** | They don't lose clients |
+| Safe manhours | **27 million** | Updated from 25M (previous source) |
+| International awards | **Gold + Bronze Stevie** (Oct 2025) | External validation of transformation |
+| Best Employer | **3 consecutive years** (Inquirer/Statista) | Talent magnet — important for remote mining ops |
+
+### ACI Plus — The IMS Rebrand
+
+ACI formally launched its Industrial Maintenance Services as a distinct business segment in 2023, then rebranded it as **"ACI Plus"** in 2025–2026. This is not a sideline — it's the company's primary growth vector:
+
+- ₱650M revenue in 2024, targeting ₱1B by 2026
+- 14 new clients secured in two years
+- Dedicated BD email channel separate from construction
+- Sebastian Aboitiz hired specifically for BD (international background — Norwegian renewable energy)
+
+**THE STRATEGIC PLAYBOOK: Build, Then Maintain.**
+ACI's competitive advantage is the ability to construct a facility and then transition into long-term maintenance contracts. Proven at:
+- **THPAL** — 13 years and counting (since 2012)
+- **DICT Bulk Terminal** — since 2017
+- **Apo Agua** — since 2023, contracted through 2027
+
+**IMPLICATION FOR GMC:** A mining partnership with ACI isn't a one-time construction contract. It's a multi-decade relationship: they build the mining infrastructure, then maintain it indefinitely. This is exactly how they think, and exactly how they grow.
+
+### Vision 2030
+
+> "We aspire to become the country's premier construction **and asset management** service provider by 2030."
+
+The dual framing is deliberate. They're transitioning from project-based construction (feast-or-famine revenue) to construction + recurring maintenance (predictable, growing revenue). A mining operation delivers both: massive construction upfront, decades of maintenance after.
+
+### Mining Is Deep in Their DNA
+
+ACI's mining credentials go far deeper than the corporate deck suggests:
+
+1. **THPAL Nickel Processing Facility** (Taganito, Surigao del Norte)
+   - Construction: temporary facilities, mechanical works, tank/thickener (100 tons), structural support (5,000 tons), piping (141,000 dia-inches)
+   - Maintenance: full plant maintenance + 5-year shutdown works contract, running since 2012
+   - **13-year continuous relationship** — their longest client engagement
+
+2. **6.3km Coal Conveyor for Nickel Recovery** (Surigao)
+   - 1,500 tonnes per hour capacity
+   - Purpose-built for nickel mining operations
+   - This is industrial-scale mining infrastructure, not peripheral work
+
+3. **₱583M Copper Ore Sorting Plant** (CD Processing Ltd., Toledo City, Cebu)
+   - BOI-approved facility
+   - Sandvik magnetic resonance analyzer technology
+   - 16X belt conveyors, structural modules
+   - Completed September 2021
+   - **ACI built a mineral processing plant.** Not just site prep — the actual processing facility.
+
+4. **Red 5 Siana Gold Project** (Surigao del Norte) — structural steel, tanks, plate works (1,585 tons)
+
+5. **FCF Minerals Gold Molybdenum Plant** (Nueva Vizcaya) — structural, mechanical, piping, tanks
+
+6. **Abcar Paragon Mining Corp** (Bicol) — leach absorption tanks
+
+**Mining is listed as a dedicated subsection on their website** under Heavy Industries. They don't hide it — they feature it. Their own 50th anniversary communications explicitly list mining as a core sector alongside power, oil & gas, cement.
+
+In their most recent public statement about THPAL (October 2025), they described it as maintaining **"a nickel mine and processing facility"** — mining is integral to their public identity.
+
+### The Claver Connection — Top Taxpayer
+
+ACI was recognized by the **Municipal Government of Claver, Surigao del Norte** as one of the **top business taxpayers**. Claver is where THPAL operates. This means ACI has deep community relationships in the exact region where mining happens — they're not just contractors, they're embedded community stakeholders.
+
+### Leadership Transformation (2020–Present)
+
+The company underwent a "Big Shift Strategy" post-COVID under a new leadership troika:
+
+| Leader | Role | Key Contribution |
+|--------|------|-----------------|
+| **Anton Mari G. Perdices** | President & Chairman | Board governance, Aboitiz Group coordination |
+| **Antonio Peñalver** | Executive Director (since Oct 2020) | Strategic direction, culture, external representation. Spanish civil engineer, Stanford LEAD, MBA IE Business School |
+| **Ramez Sidhom** | COO (since Nov 2022) | Day-to-day operations. Australian (born Sydney), previously VP Operations at Betonbau (Republic Cement/CRH group) |
+
+This leadership team turned ACI from a Triple A to Quadruple A contractor, launched IMS, won international awards, and delivered 500% contract growth in 3 years. They are operating with clear strategic intent.
+
+### Partnership Appetite — Active Signals
+
+Multiple indicators that ACI is actively seeking new partnerships:
+- Dedicated BD function for maintenance (separate from construction BD)
+- Sebastian Aboitiz hired for BD with international technical background
+- January 2026: President, Executive Director, and BD Manager all visited Claver (Surigao) client site — signals either contract expansion or capability demonstration to a potential partner
+- Peñalver consistently emphasizes "partnerships" and "shared commitment" in public statements
+- 14 new IMS clients in 2 years = aggressive outbound prospecting
+
+### Updated Presentation Strategy Additions
+
+11. **Frame GMC as a build-then-maintain opportunity.** Don't just pitch the mine — pitch the decades of maintenance revenue that follow construction. This is literally their strategic playbook.
+
+12. **Lead with the PCAB Quadruple A angle.** Only 72 companies in the Philippines can do what ACI does at this scale. GMC's project NEEDS a AAAA contractor. The partnership is a capability match, not just a business opportunity.
+
+13. **Reference their 500% growth.** They're hungry. They're winning. GMC is the next win.
+
+14. **The IMS revenue gap.** They're at ₱650M, targeting ₱1B by 2026. A mining maintenance contract could close that gap significantly. Show them the math.
+
+15. **The Claver/Surigao connection.** They already operate in Surigao del Norte. They already know the municipal government. They're already a top taxpayer there. GMC's asset is in their backyard.
+
+16. **The ₱583M copper plant precedent.** They've already built a mineral processing facility. This isn't theoretical — they have executed exactly this type of project before.
