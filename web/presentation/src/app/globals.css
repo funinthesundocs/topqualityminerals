@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply text-text-primary bg-bg-primary font-sans antialiased;
+  }
+}
+
+@layer components {
+  .metric-number {
+    @apply font-mono font-bold text-brand-navy;
+  }
+  .metric-label {
+    @apply font-sans text-sm text-text-muted uppercase tracking-widest;
+  }
+  .section-padding {
+    @apply py-24 max-md:py-16;
+  }
+  .content-wrapper {
+    @apply max-w-7xl mx-auto px-6;
+  }
+  .gradient-fallback {
+    background: linear-gradient(135deg, #0C1926, #1B365D);
+  }
+}
+
+/* Projector optimization: scale up at 1920px+ */
+@media (min-width: 1920px) {
+  .projector-scale {
+    font-size: 115%;
+  }
+}
