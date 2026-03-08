@@ -265,13 +265,15 @@ The timeline below reflects realistic assessment of Philippine mining permit pro
 | Community programs scale | Full SDMP funding (1.5% of operating cost), expanded local employment | JV entity |
 | Continuous optimization | ADI data analytics, process efficiency improvements | ADI |
 
-### Critical Path Item: FPIC
+### Critical Path Item: FPIC — APPROVED
 
-**Free and Prior Informed Consent is the longest lead time and highest risk permit in the sequence.** Timeline: 6-18 months. The NCIP process requires genuine engagement with indigenous communities in the project area — and indigenous peoples hold effective veto power over project advancement.
+**Free and Prior Informed Consent has been secured.** This was previously identified as the longest lead time and highest risk permit in the sequence. FPIC approval has been obtained through the NCIP process, reflecting GMC's longstanding relationship with the indigenous community — the workforce is approximately 60% Lumad.
 
-This is not a box to check. It is the single most consequential community relationship in the partnership. The approach must be authentic, sustained, and respectful. ACI's track record in Claver — where they became a top taxpayer and created nearly 1,000 local jobs — provides a credible model for how to build social license that endures.
+The approval retires the single most significant permitting bottleneck. Ongoing community engagement remains essential — the THPAL model of sustained investment and local hiring (91% local workforce, top taxpayer, community programs) is the template for maintaining social license throughout operations. FPIC approval is a milestone, not an endpoint.
 
-FPIC initiation should begin in parallel with other Phase 2 activities to avoid becoming a serial bottleneck.
+### Next Commercial Milestone: First Vessel Shipment
+
+The immediate operational milestone is **shipping one vessel of ore for the commercial mining permit**. This is the transition from exploration to commercial production — the threshold that activates the full revenue model. GMC has the BOC exporter registration (February 2026), PHILEXPORT membership, and magnetic separator equipment (USD 180K, ordered January 2026) in place. The partner's role accelerates this timeline.
 
 ---
 
@@ -315,7 +317,22 @@ The DMPF provides a useful starting framework for understanding project scale an
 
 ---
 
-## 8. The Ask
+## 8. GMC's Position on Partnership Terms
+
+GMC's leadership has indicated expectations for the JV equity structure:
+
+- **Preferred split: 60/40 or 70/30** — with Aboitiz as the majority partner providing capital, construction capability, and operational discipline
+- **DMC receives 20% of net profit** from mining operations — this is fixed under the Compromise Agreement and is non-negotiable
+- **GMC controls the site, the documents, and the relationships** — the MPSA, MGB approvals, community consent (FPIC), indigenous workforce relationships, and geological knowledge reside with GMC
+- **The JV partner enters under GMC's existing rights** — the MPSA is already in place, MGB Director's ORDER already issued, FPIC already approved, drill data already collected
+
+**The framing from GMC's principal: "The principles are already agreed. This meeting is orientation to what's inside the mountain."**
+
+This is not a negotiation meeting. The commercial framework — JV structure, DMC royalty, GMC's role as operator — is established. What remains is for the partner to understand the asset, verify the data through due diligence, and decide whether to commit capital and capability to development.
+
+---
+
+## 9. The Ask
 
 This meeting is not a request for a signed agreement. It is a proposal for a structured next step.
 

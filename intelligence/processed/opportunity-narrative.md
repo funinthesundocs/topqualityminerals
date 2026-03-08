@@ -312,3 +312,56 @@ Close-up macro photograph of mineralized rock surface showing iridescent blue, g
 
 ### Strategic Significance
 This quotation indicates GMC is procuring iron ore beneficiation equipment from China to upgrade its processing capabilities. With 4 units at 120 tons/hour each, the combined processing capacity would be approximately **480 tons per hour** (or roughly **11,520 tons per day** in continuous operation). This is consistent with GMC's stated production targets and suggests active capital investment in operations expansion. The dry magnetic separation technology is particularly relevant for iron ore pre-concentration, improving the grade of ore before export -- aligning with GMC's claim of exceeding 65% Fe quality standards. The equipment's dry processing capability also addresses environmental concerns by eliminating water usage in the separation stage.
+
+---
+
+## Jett Tupas Interview — Primary Source Intelligence (March 8, 2026)
+
+*Source: jett-tupas-interview-20260308.md — Phone interview between Jett P. Tupas (GMC President/CEO) and Matt (presentation/strategy lead). 22 questions answered.*
+
+### Deal Structure & DMC Relationship
+- **Exclusive operator for 33 years** under formal operating agreement with "absolute transfer of rights" under Philippine mining law
+- **DMC gets 20% of net PROFIT** (not revenue) — originally 15%, increased to 20% via Compromise Agreement. The additional 5% expires after 10 years
+- **Court ruling is FINAL**: DMC attempted to challenge GMC in court and lost. Case dismissed. Cannot refile under Philippine law. DMC has "a lot of violations" giving GMC additional leverage
+- **Aboitiz NOT yet told about DMC conflict** — Jett considers it a non-issue since court ruled in GMC's favor. His position: "It's better that it happened because now the court has ruled on it"
+- **JV structure expectation**: 60/40 or 70/30 split. Jett comfortable with either. GMC controls site and documents. JV partner enters under GMC's existing rights
+
+### 18-Year Timeline Explanation
+- DMC held MPSA from 2007 but did "paper mining" — no actual exploration compliance
+- GMC could not take operational control until **2021** when national government approved the operating agreement
+- Since 2021: GMC executing exploration compliance, discovering ore bodies, building toward commercial mining permit
+- **Next milestone**: Ship one vessel to qualify for commercial mining permit
+
+### FPIC Status — APPROVED
+- **FPIC is ALREADY APPROVED by the indigenous people** — Jett confirms this directly
+- This eliminates the single highest risk factor previously identified in the risk matrix
+
+### Financial Projections Context
+- **DMPF projections (₱13.4B NPV, 78% IRR) are based on IRON ORE ONLY**
+- Copper and gold revenues are NOT included — represent additional upside
+- Jett: copper and gold represent "almost a year over" additional income not in the numbers
+- This actually makes the projections more credible, not less — they're conservative by omission
+
+### MPSA Extension
+- **"In principle granted"** — MGB has given positive written indication
+- Final documents need to be submitted to formalize
+- Jett does not see this as a problem
+
+### Gold Intelligence (Strategically Withheld)
+- Jett has verified gold presence across **850m wide, 1km deep, and 500m around**
+- This is **NOT in the official reports** — deliberately kept confidential
+- Jett told Aboitiz "we have a report on 16 million [tons] but we hide something"
+- Gold is Jett's view of GMC's single strongest asset at current gold prices
+- Consistent presence of gold across every assay
+
+### Meeting Context (Thursday)
+- **Site visit FIRST**, then afternoon presentation
+- Jett meeting Sebastian and Antonio for the **FIRST TIME**
+- **NOT a sales pitch** — "the principles are already done with them"
+- This is orientation to what's inside the mountain
+- Jett needs the Sebastian/Antonio briefing — doesn't know them personally
+
+### Aboitiz Concern (Internal)
+- Jett is concerned that Aboitiz could use their government connections and power to take the mining claim
+- **Mitigation**: GMC controls the site, controls the documents, MPSA is coterminous — JV partner enters under GMC's existing rights, not as an equal holder
+- Philippine mining law protects GMC's position as the authorized operator

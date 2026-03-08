@@ -338,7 +338,36 @@ Compiled from Sections 9–12 of target-profile.md:
 
 ---
 
-## 8. Tone Calibration by Presentation Section
+## 8. Meeting Context — Critical Intelligence from GMC Principal
+
+### This Is a First Meeting
+
+**Jett Tupas (GMC principal) is meeting Sebastian Aboitiz and Antonio Penalver for the FIRST TIME at this Thursday meeting.** There is no prior personal relationship. The connection was brokered — this is the introductory engagement. Jett needs the full briefing on who he is meeting, their decision-making style, and what matters to them.
+
+### Meeting Structure: Site Visit First, Then Presentation
+
+The meeting is structured as **site visit in the morning, afternoon presentation**. This is significant — Sebastian and Antonio will have physically seen the site, the terrain, the access roads, the local community, and the mining area BEFORE they sit down for the formal presentation. Anything claimed in the presentation will be measured against what they observed hours earlier. **Do not claim anything in slides that contradicts what they will see on site.**
+
+### This Is NOT a Sales Pitch
+
+The commercial relationship is already established at the institutional level. The principles are agreed. This meeting is **orientation to what's inside the mountain** — an introduction to the asset, the data, the team, and the opportunity. The tone should be informational and confident, not persuasive or eager.
+
+Frame: "We are showing you what we have. We believe the data speaks for itself. We welcome your scrutiny."
+
+### The Aboitiz Power Concern
+
+Jett Tupas has expressed a specific concern: **Aboitiz's power sector dominance could be used to take the mining claim.** This is a real fear — that a conglomerate with enormous resources and political connections could use its position to marginalize the smaller partner once the asset's value is confirmed.
+
+**Implications for the presentation:**
+- Emphasize partnership of equals throughout
+- Stress that GMC controls the MPSA (through DMC), the MGB approvals, the FPIC consent, and the community relationships — these are not transferable assets
+- Frame the JV governance provisions (board seats proportional to equity, reserved matters, deadlock resolution) as protections for BOTH parties
+- Reference ACI's 13-year relationship at THPAL as evidence of how Aboitiz treats long-term partners — they did not absorb Sumitomo or Nickel Asia
+- Never minimize this concern if it surfaces — acknowledge it directly and address it with structural protections
+
+---
+
+## 9. Tone Calibration by Presentation Section
 
 ### Section 1: Opening — Establish Credibility and Connection
 
