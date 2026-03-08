@@ -2,10 +2,24 @@
 
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
 import { Brain, Send, User, Bot, Mic, Volume2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
-interface Message {
+const DEAL_ID = '57eb32a1-8550-45d1-8906-64652642c465'
+
+interface DbMessage {
+  id: string
   role: 'user' | 'assistant'
   content: string
+  sender_name: string
+  created_at: string
+}
+
+interface Message {
+  id?: string
+  role: 'user' | 'assistant'
+  content: string
+  sender_name?: string
+  created_at?: string
 }
 
 const SUGGESTED_QUESTIONS = [
@@ -42,7 +56,25 @@ function stripMarkdown(text: string): string {
     .replace(/\[Source:[^\]]*\]/g, '')
 }
 
-// Sentence boundary regex: split on .  ?  !  or newline followed by content
+function relativeTime(dateStr: string): string {
+  const now = new Date()
+  const date = new Date(dateStr)
+  const diffMs = now.getTime() - date.getTime()
+  const diffMin = Math.floor(diffMs / 60000)
+  const diffHr = Math.floor(diffMs / 3600000)
+  const diffDay = Math.floor(diffMs / 86400000)
+
+  if (diffMin < 1) return 'Just now'
+  if (diffMin < 60) return `${diffMin} min ago`
+  if (diffHr < 24) return `${diffHr} hour${diffHr > 1 ? 's' : ''} ago`
+  if (diffDay === 1) {
+    return `Yesterday ${date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
+  }
+  if (diffDay < 7) return `${diffDay} days ago`
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' +
+    date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
+
 const SENTENCE_RE = /(?<=[.!?])\s+|(?<=\n)\s*/
 
 function extractSentences(text: string, alreadySent: number): string[] {
@@ -51,7 +83,6 @@ function extractSentences(text: string, alreadySent: number): string[] {
   return allSentences.slice(alreadySent)
 }
 
-// Audio queue that fetches TTS per sentence and plays sequentially
 class AudioQueue {
   private queue: Promise<Blob | null>[] = []
   private playing = false
@@ -100,16 +131,8 @@ class AudioQueue {
     this.currentAudio = audio
 
     await new Promise<void>((resolve) => {
-      audio.onended = () => {
-        URL.revokeObjectURL(url)
-        this.currentAudio = null
-        resolve()
-      }
-      audio.onerror = () => {
-        URL.revokeObjectURL(url)
-        this.currentAudio = null
-        resolve()
-      }
+      audio.onended = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
+      audio.onerror = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
       audio.play().catch(() => resolve())
     })
 
@@ -119,10 +142,7 @@ class AudioQueue {
   cancel() {
     this.cancelled = true
     this.queue = []
-    if (this.currentAudio) {
-      this.currentAudio.pause()
-      this.currentAudio = null
-    }
+    if (this.currentAudio) { this.currentAudio.pause(); this.currentAudio = null }
     this.playing = false
     this.onStateChange(false)
   }
@@ -134,14 +154,73 @@ export default function AgentPage() {
   const [isStreaming, setIsStreaming] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [hasSpeechRecognition, setHasSpeechRecognition] = useState(false)
+  const [silenceCountdown, setSilenceCountdown] = useState<number | null>(null)
   const [voiceEnabled, setVoiceEnabled] = useState(true)
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [historyLoaded, setHistoryLoaded] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const recognitionRef = useRef<any>(null)
   const voiceEnabledRef = useRef(true)
   const speechRecognitionRef = useRef<any>(null)
   const audioQueueRef = useRef<AudioQueue | null>(null)
+  const messageIdsRef = useRef<Set<string>>(new Set())
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const transcriptRef = useRef('')
+
+  // Load conversation history from Supabase on mount
+  useEffect(() => {
+    async function loadHistory() {
+      const { data } = await supabase
+        .from('agent_conversations')
+        .select('id, role, content, sender_name, created_at')
+        .eq('deal_id', DEAL_ID)
+        .order('created_at', { ascending: true })
+
+      if (data && data.length > 0) {
+        const msgs: Message[] = data.map((row: DbMessage) => ({
+          id: row.id,
+          role: row.role,
+          content: row.content,
+          sender_name: row.sender_name,
+          created_at: row.created_at,
+        }))
+        setMessages(msgs)
+        for (const row of data) {
+          messageIdsRef.current.add(row.id)
+        }
+      }
+      setHistoryLoaded(true)
+    }
+    loadHistory()
+  }, [])
+
+  // Subscribe to realtime inserts from other clients
+  useEffect(() => {
+    const channel = supabase
+      .channel('agent_conversations_realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'agent_conversations', filter: `deal_id=eq.${DEAL_ID}` },
+        (payload: any) => {
+          const row = payload.new as DbMessage
+          // Skip messages we already have (ones we inserted ourselves)
+          if (messageIdsRef.current.has(row.id)) return
+          messageIdsRef.current.add(row.id)
+          setMessages(prev => [...prev, {
+            id: row.id,
+            role: row.role,
+            content: row.content,
+            sender_name: row.sender_name,
+            created_at: row.created_at,
+          }])
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [])
 
   useEffect(() => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -169,18 +248,27 @@ export default function AgentPage() {
     scrollToBottom()
   }, [messages, scrollToBottom])
 
-  // Replay full message via TTS (for the speaker button on past messages)
   const playFullMessage = useCallback((text: string) => {
-    if (audioQueueRef.current) {
-      audioQueueRef.current.cancel()
-    }
+    if (audioQueueRef.current) audioQueueRef.current.cancel()
     const queue = new AudioQueue((playing) => setIsSpeaking(playing))
     audioQueueRef.current = queue
-
     const sentences = stripMarkdown(text).split(SENTENCE_RE).filter(s => s.trim().length > 5)
-    for (const sentence of sentences) {
-      queue.enqueue(sentence)
+    for (const sentence of sentences) queue.enqueue(sentence)
+  }, [])
+
+  // Insert a message into Supabase
+  const saveMessage = useCallback(async (role: 'user' | 'assistant', content: string) => {
+    const { data } = await supabase
+      .from('agent_conversations')
+      .insert({ deal_id: DEAL_ID, role, content, sender_name: 'Team Member' })
+      .select('id, created_at')
+      .single()
+
+    if (data) {
+      messageIdsRef.current.add(data.id)
+      return { id: data.id, created_at: data.created_at }
     }
+    return null
   }, [])
 
   const sendMessage = useCallback(async (text: string) => {
@@ -192,7 +280,13 @@ export default function AgentPage() {
     setInput('')
     setIsStreaming(true)
 
-    // Cancel any ongoing audio
+    // Save user message to Supabase immediately
+    const saved = await saveMessage('user', text.trim())
+    if (saved) {
+      userMessage.id = saved.id
+      userMessage.created_at = saved.created_at
+    }
+
     if (audioQueueRef.current) {
       audioQueueRef.current.cancel()
       audioQueueRef.current = null
@@ -201,7 +295,6 @@ export default function AgentPage() {
     const assistantMessage: Message = { role: 'assistant', content: '' }
     setMessages([...updatedMessages, assistantMessage])
 
-    // Set up audio queue for streaming TTS
     let sentencesSent = 0
     let audioQueue: AudioQueue | null = null
     if (voiceEnabledRef.current) {
@@ -210,11 +303,14 @@ export default function AgentPage() {
     }
 
     try {
+      // Build conversation context from last 10 messages for the API
+      const recentHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          messages: recentHistory,
           question: text.trim(),
         }),
       })
@@ -236,7 +332,6 @@ export default function AgentPage() {
         if (done) break
 
         buffer += decoder.decode(value, { stream: true })
-
         const lines = buffer.split('\n')
         buffer = lines.pop() || ''
 
@@ -244,7 +339,6 @@ export default function AgentPage() {
           if (line.startsWith('data: ')) {
             const data = line.slice(6)
             if (data === '[DONE]') continue
-
             try {
               const parsed = JSON.parse(data)
               if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
@@ -255,11 +349,8 @@ export default function AgentPage() {
                   return updated
                 })
 
-                // Check for new complete sentences to send to TTS
                 if (audioQueue) {
                   const newSentences = extractSentences(assistantContent, sentencesSent)
-                  // Only send sentences if there's more text coming (keep last partial)
-                  // We know more text is coming because done === false
                   const toSend = newSentences.slice(0, -1)
                   for (const sentence of toSend) {
                     audioQueue.enqueue(sentence)
@@ -267,27 +358,28 @@ export default function AgentPage() {
                   }
                 }
               }
-            } catch {
-              // Skip unparseable lines
-            }
+            } catch { /* skip */ }
           }
         }
       }
 
-      // Finalize
       if (assistantContent) {
+        // Save assistant response to Supabase
+        const savedAssistant = await saveMessage('assistant', assistantContent)
         setMessages(prev => {
           const updated = [...prev]
-          updated[updated.length - 1] = { role: 'assistant', content: assistantContent }
+          updated[updated.length - 1] = {
+            role: 'assistant',
+            content: assistantContent,
+            id: savedAssistant?.id,
+            created_at: savedAssistant?.created_at,
+          }
           return updated
         })
 
-        // Send any remaining sentence to TTS
         if (audioQueue) {
           const remaining = extractSentences(assistantContent, sentencesSent)
-          for (const sentence of remaining) {
-            audioQueue.enqueue(sentence)
-          }
+          for (const sentence of remaining) audioQueue.enqueue(sentence)
         }
       }
     } catch (error: any) {
@@ -303,7 +395,7 @@ export default function AgentPage() {
       setIsStreaming(false)
       inputRef.current?.focus()
     }
-  }, [messages, isStreaming])
+  }, [messages, isStreaming, saveMessage])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -314,38 +406,95 @@ export default function AgentPage() {
     sendMessage(question)
   }
 
+  const clearSilenceTimer = useCallback(() => {
+    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null }
+    if (countdownIntervalRef.current) { clearInterval(countdownIntervalRef.current); countdownIntervalRef.current = null }
+    setSilenceCountdown(null)
+  }, [])
+
+  const startSilenceTimer = useCallback(() => {
+    clearSilenceTimer()
+    let remaining = 3
+    setSilenceCountdown(remaining)
+    countdownIntervalRef.current = setInterval(() => {
+      remaining--
+      if (remaining > 0) {
+        setSilenceCountdown(remaining)
+      }
+    }, 1000)
+    silenceTimerRef.current = setTimeout(() => {
+      clearSilenceTimer()
+      const text = transcriptRef.current.trim()
+      if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
+      setIsListening(false)
+      if (text) {
+        setInput('')
+        sendMessage(text)
+      }
+      transcriptRef.current = ''
+    }, 3500)
+  }, [clearSilenceTimer, sendMessage])
+
   const startListening = useCallback(() => {
     if (!speechRecognitionRef.current || isStreaming) return
-
     const recognition = new speechRecognitionRef.current()
-    recognition.continuous = false
-    recognition.interimResults = false
+    recognition.continuous = true
+    recognition.interimResults = true
     recognition.lang = 'en-US'
+    transcriptRef.current = ''
 
     recognition.onstart = () => setIsListening(true)
 
     recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript
-      if (transcript.trim()) {
+      let finalTranscript = ''
+      let interimTranscript = ''
+      for (let i = 0; i < event.results.length; i++) {
+        const result = event.results[i]
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript
+        } else {
+          interimTranscript += result[0].transcript
+        }
+      }
+      const fullText = (finalTranscript + interimTranscript).trim()
+      transcriptRef.current = fullText
+      setInput(fullText)
+      // Reset silence timer on every new result
+      startSilenceTimer()
+    }
+
+    recognition.onerror = () => {
+      clearSilenceTimer()
+      setIsListening(false)
+      transcriptRef.current = ''
+    }
+
+    recognition.onend = () => {
+      // If continuous mode ends unexpectedly (browser limit), send what we have
+      if (transcriptRef.current.trim() && !silenceTimerRef.current) {
+        const text = transcriptRef.current.trim()
+        setIsListening(false)
         setInput('')
-        sendMessage(transcript.trim())
+        sendMessage(text)
+        transcriptRef.current = ''
       }
     }
 
-    recognition.onerror = () => setIsListening(false)
-    recognition.onend = () => setIsListening(false)
-
     recognitionRef.current = recognition
     recognition.start()
-  }, [isStreaming, sendMessage])
+  }, [isStreaming, sendMessage, startSilenceTimer, clearSilenceTimer])
 
   const stopListening = useCallback(() => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop()
-      recognitionRef.current = null
-    }
+    clearSilenceTimer()
+    const text = transcriptRef.current.trim()
+    if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
     setIsListening(false)
-  }, [])
+    if (text) {
+      setInput('')
+      sendMessage(text)
+    }
+    transcriptRef.current = ''
+  }, [clearSilenceTimer, sendMessage])
 
   return (
     <div className="page-enter flex flex-col h-[calc(100vh-7rem)] -mt-2">
@@ -356,7 +505,7 @@ export default function AgentPage() {
         </div>
         <div>
           <h1 className="text-lg font-semibold text-zinc-100">AI Agent</h1>
-          <p className="text-xs text-zinc-500">RAG-powered deal intelligence advisor</p>
+          <p className="text-xs text-zinc-500">Shared conversation — visible to all team members</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-zinc-500">Voice</span>
@@ -378,7 +527,11 @@ export default function AgentPage() {
 
       {/* Message Area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto py-4 space-y-4 scroll-smooth">
-        {messages.length === 0 ? (
+        {!historyLoaded ? (
+          <div className="flex items-center justify-center h-full">
+            <span className="text-zinc-500 text-sm">Loading conversation...</span>
+          </div>
+        ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-6">
             <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800">
               <Brain size={32} className="text-[var(--color-primary)] opacity-60" />
@@ -401,7 +554,7 @@ export default function AgentPage() {
           </div>
         ) : (
           messages.map((msg, i) => (
-            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={msg.id || i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
                 <div className="flex-shrink-0 w-7 h-7 rounded-md bg-zinc-800 flex items-center justify-center mt-0.5">
                   <Bot size={14} className="text-[var(--color-primary)]" />
@@ -410,15 +563,13 @@ export default function AgentPage() {
               <div
                 className={`max-w-[75%] rounded-lg px-4 py-3 text-sm leading-relaxed relative ${
                   msg.role === 'user'
-                    ? 'bg-zinc-800 text-zinc-100'
+                    ? 'bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-zinc-100'
                     : 'bg-zinc-900 border-l-2 border-[var(--color-primary)] text-zinc-200'
                 }`}
               >
                 {msg.role === 'assistant' ? (
                   <>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }}
-                    />
+                    <div dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }} />
                     {isStreaming && i === messages.length - 1 && (
                       <span className="inline-flex gap-1 ml-1 mt-1">
                         <span className="w-1.5 h-1.5 bg-[var(--color-primary)] rounded-full animate-pulse" />
@@ -429,7 +580,7 @@ export default function AgentPage() {
                     {msg.content && !isStreaming && (
                       <button
                         onClick={() => playFullMessage(msg.content)}
-                        className={`absolute bottom-1.5 right-1.5 p-1 rounded transition-colors text-zinc-600 hover:text-zinc-300`}
+                        className="absolute bottom-1.5 right-1.5 p-1 rounded transition-colors text-zinc-600 hover:text-zinc-300"
                         title="Play audio"
                       >
                         <Volume2 size={12} />
@@ -438,6 +589,11 @@ export default function AgentPage() {
                   </>
                 ) : (
                   <span>{msg.content}</span>
+                )}
+                {msg.created_at && (
+                  <div className={`text-[10px] text-zinc-500 mt-1.5 ${msg.role === 'user' ? 'text-right' : ''}`}>
+                    {relativeTime(msg.created_at)}
+                  </div>
                 )}
               </div>
               {msg.role === 'user' && (
@@ -454,7 +610,10 @@ export default function AgentPage() {
       {isListening && (
         <div className="flex items-center justify-center gap-2 py-2 text-xs text-[var(--color-primary)]">
           <span className="w-2 h-2 bg-[var(--color-primary)] rounded-full animate-pulse" />
-          Listening...
+          {silenceCountdown !== null
+            ? <span className="text-zinc-400">Sending in {silenceCountdown}...</span>
+            : 'Listening...'
+          }
         </div>
       )}
 

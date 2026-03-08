@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-const VOICE_ID = 'ErXwobaYiN019PkySvjV' // Antoni
+const VOICE_ID = 'dtSEyYGNJqjrtBArPCVZ' // Titan
 
 export async function POST(req: NextRequest) {
   try {
