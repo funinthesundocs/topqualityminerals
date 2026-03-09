@@ -1,8 +1,12 @@
-import { NextRequest } from 'next/server'
+import type { Context } from "@netlify/functions"
 
 const VOICE_ID = 'dtSEyYGNJqjrtBArPCVZ' // Titan
 
-export async function POST(req: NextRequest) {
+export default async (req: Request, _context: Context) => {
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 })
+  }
+
   try {
     const { text } = await req.json()
     if (!text) {
@@ -17,7 +21,7 @@ export async function POST(req: NextRequest) {
       {
         method: 'POST',
         headers: {
-          'xi-api-key': process.env.ELEVENLABS_API_KEY!,
+          'xi-api-key': Netlify.env.get('ELEVENLABS_API_KEY')!,
           'Content-Type': 'application/json',
           Accept: 'audio/mpeg',
         },

@@ -1,12 +1,16 @@
-import { NextRequest } from 'next/server'
-import { createServerClient } from '@/lib/supabase'
+import type { Context } from "@netlify/functions"
+import { createClient } from '@supabase/supabase-js'
 
-export async function POST(req: NextRequest) {
+export default async (req: Request, _context: Context) => {
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 })
+  }
+
   try {
     const { messages, question, voice } = await req.json()
 
-    // 1. Embed the question using Gemini (must match embedding model used for documents)
-    const geminiApiKey = process.env.GEMINI_API_KEY
+    // 1. Embed the question using Gemini
+    const geminiApiKey = Netlify.env.get('GEMINI_API_KEY')
 
     const embeddingRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiApiKey}`,
@@ -23,14 +27,17 @@ export async function POST(req: NextRequest) {
     const embedding = embeddingData.embedding.values
 
     // 2. Query Supabase match_intelligence RPC
-    const supabase = createServerClient()
+    const supabase = createClient(
+      Netlify.env.get('NEXT_PUBLIC_SUPABASE_URL')!,
+      Netlify.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    )
     const { data: chunks } = await supabase.rpc('match_intelligence', {
       query_embedding: embedding,
       match_threshold: 0.3,
       match_count: 10,
     })
 
-    // 3. Assemble context from retrieved chunks
+    // 3. Assemble context
     const context = (chunks || [])
       .map((c: any) => `[${c.track}/${c.category} | similarity: ${c.similarity?.toFixed(3)}]\n${c.content}`)
       .join('\n\n---\n\n')
@@ -55,7 +62,7 @@ ${lengthGuidance}`
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
+        'x-api-key': Netlify.env.get('ANTHROPIC_API_KEY')!,
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },
@@ -68,7 +75,6 @@ ${lengthGuidance}`
       }),
     })
 
-    // 5. Stream the response back
     return new Response(anthropicRes.body, {
       headers: {
         'Content-Type': 'text/event-stream',
