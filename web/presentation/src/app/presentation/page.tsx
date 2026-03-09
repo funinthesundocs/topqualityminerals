@@ -56,7 +56,7 @@ function CountUp({ target, suffix = '' }: { target: string; suffix?: string }) {
   }, [target, suffix])
 
   return (
-    <div ref={ref} className="font-mono font-bold text-5xl md:text-7xl text-white leading-none">
+    <div ref={ref} className="font-mono font-bold text-3xl min-[400px]:text-5xl md:text-7xl text-white leading-none">
       {value}<span className="text-brand-gold">{suffix}</span>
     </div>
   )
@@ -146,14 +146,14 @@ export default function PresentationPage() {
       </div>
 
       {/* Section counter */}
-      <div className="fixed bottom-6 right-6 z-50 font-mono text-sm text-white/60 bg-black/40 backdrop-blur rounded-full px-3 py-1">
+      <div className="fixed bottom-6 right-6 z-50 font-mono text-sm text-white/60 bg-black/40 backdrop-blur rounded-full px-3 py-1" style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}>
         {currentSection + 1} / {sections.length}
       </div>
 
       {/* Scroll-snap container */}
       <div
         ref={containerRef}
-        className="h-screen overflow-y-auto snap-y snap-mandatory"
+        className="h-[100dvh] overflow-y-auto snap-y snap-mandatory"
         style={{ scrollSnapType: 'y mandatory' }}
       >
         {/* ============================================================ */}
@@ -162,14 +162,14 @@ export default function PresentationPage() {
         {/* ============================================================ */}
         <section data-section="0" className="min-h-screen flex items-center justify-center snap-start relative bg-[#0C1926]">
           <Image
-            src="/images/generated/topo-texture-dark.png"
+            src="/images/generated/topo-texture-dark.webp"
             alt=""
             fill
             className="object-cover opacity-30"
             sizes="100vw"
           />
           <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-            <h1 className="font-playfair font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-4 leading-tight">
+            <h1 className="font-playfair font-bold text-[clamp(1.75rem,5vw,4.5rem)] text-white mb-4 leading-tight">
               A Partnership Built for This Moment
             </h1>
             <p className="text-brand-gold text-xl md:text-2xl font-medium tracking-wide mb-16">
@@ -206,9 +206,9 @@ export default function PresentationPage() {
             </h2>
             <div className="grid md:grid-cols-3 gap-5 max-w-6xl mx-auto mb-12">
               {[
-                { src: '/images/generated/iron-hero-data.png', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
-                { src: '/images/generated/copper-hero-data.png', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
-                { src: '/images/generated/gold-hero-data.png', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
+                { src: '/images/generated/iron-hero-data.webp', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
+                { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
+                { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
               ].map((img, i) => (
                 <div
                   key={img.src}
@@ -248,7 +248,7 @@ export default function PresentationPage() {
             <div className="max-w-5xl mx-auto">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/generated/partnership-ecosystem.png"
+                  src="/images/generated/partnership-ecosystem.webp"
                   alt="GMC and Strategic Partner — complementary capabilities forming the natural next step"
                   width={1920}
                   height={1080}
@@ -272,7 +272,7 @@ export default function PresentationPage() {
             <div className="max-w-6xl mx-auto">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/generated/cross-section-infographic.png"
+                  src="/images/generated/cross-section-infographic.webp"
                   alt="Geological deposit cross-section — 8 core samples, iron oxide cap, transition zone, sulfide zone, porphyry target"
                   width={1920}
                   height={1080}
@@ -363,7 +363,7 @@ export default function PresentationPage() {
         {/* ============================================================ */}
         <section data-section="5" className="min-h-screen flex items-center snap-start relative bg-[#0C1926]">
           <Image
-            src="/images/generated/topo-texture-dark.png"
+            src="/images/generated/topo-texture-dark.webp"
             alt=""
             fill
             className="object-cover opacity-20"
@@ -392,7 +392,7 @@ export default function PresentationPage() {
         {/* ============================================================ */}
         <section data-section="6" className="min-h-screen flex items-center justify-center snap-start relative">
           <Image
-            src="/images/generated/hero-landscape-enhanced.png"
+            src="/images/generated/hero-landscape-enhanced.webp"
             alt="Davao Oriental — tropical mountains at golden hour"
             fill
             className="object-cover"

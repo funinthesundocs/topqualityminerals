@@ -32,7 +32,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-bg-dark text-white">
+    <footer className="bg-bg-dark text-white" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       {/* Back to Top */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-end">

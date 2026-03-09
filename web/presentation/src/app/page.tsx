@@ -15,7 +15,7 @@ export default function HomePage() {
       .sort()
       .map(f => `/images/hero-slideshow/${f}`)
   } catch {
-    heroImages = ['/images/generated/hero-landscape-enhanced.png']
+    heroImages = ['/images/generated/hero-landscape-enhanced.webp']
   }
 
   return <HomePageClient heroImages={heroImages} />

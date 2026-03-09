@@ -12,7 +12,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Concession Area': {
     title: '5,906-Hectare MPSA Concession — Davao Oriental',
     type: 'image' as EvidenceType,
-    src: '/images/evidence/mati-overhead.jpg',
+    src: '/images/evidence/mati-overhead.webp',
     imageWidth: 2400,
     imageHeight: 1562,
     caption: 'Google Earth satellite overlay showing the full 5,906-hectare GMC concession in Tarragona and Mati City, Davao Oriental. The concession boundary is marked in yellow-green, with drill sites, features, and the Mati City Port visible. Dense tropical forest canopy covers the mineral-rich terrain.',
@@ -21,7 +21,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Independent Validation': {
     title: 'Nine Independent Laboratories, Five Countries',
     type: 'image' as EvidenceType,
-    src: '/images/generated/evidence-portfolio.png',
+    src: '/images/generated/evidence-portfolio.webp',
     imageWidth: 2752,
     imageHeight: 1536,
     caption: 'Nine laboratories across South Korea, China, Philippines, and Indonesia have independently validated the deposit. Each laboratory answered a different question — grade, consistency, depth persistence, processability — and all converge on the same deposit model.',
@@ -30,7 +30,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Poly-Mineralization': {
     title: 'Electromagnetic Survey — 3D Subsurface Model',
     type: 'image' as EvidenceType,
-    src: '/images/evidence/emscan3.jpeg',
+    src: '/images/evidence/emscan3.webp',
     imageWidth: 1170,
     imageHeight: 882,
     caption: '3D electromagnetic survey visualization showing massive mineralization body extending from surface to depth. Hot zones (red/magenta) indicate high-conductivity polymetallic mineralization — iron, copper, and gold confirmed by nine laboratories.',
@@ -39,7 +39,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Peak Iron Grade': {
     title: 'POSCO International — 67.31% Fe Assay',
     type: 'image' as EvidenceType,
-    src: '/images/evidence/posco-assay.png',
+    src: '/images/evidence/posco-assay.webp',
     imageWidth: 1530,
     imageHeight: 2340,
     caption: 'POSCO International sample analysis results showing T-Fe at 67.31% for fine ore and 67.31% for lump ore — shipping-grade premium with very low phosphorus (0.012–0.021%) and sulfur (0.002–0.013%). Comparable to top-tier Brazilian and Australian product.',
@@ -48,7 +48,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Peak Copper Grade': {
     title: 'Davao Analytical — 39.5% Cu Assay',
     type: 'image' as EvidenceType,
-    src: '/images/evidence/davao-analytical-assay.png',
+    src: '/images/evidence/davao-analytical-assay.webp',
     imageWidth: 1488,
     imageHeight: 2105,
     caption: 'Davao Analytical Laboratories test report for Genluiching Mining Corp. showing iron, copper, gold, and sulfur analysis via Wet Digestion and AAS methods. Near-concentrate copper grades confirmed across multiple samples.',
@@ -57,7 +57,7 @@ const metricEvidence: Record<string, EvidenceData> = {
   'Resource Estimate': {
     title: 'Porphyry Deposit Model — Ore Body Structure',
     type: 'image' as EvidenceType,
-    src: '/images/evidence/emscan2.jpeg',
+    src: '/images/evidence/emscan2.webp',
     imageWidth: 630,
     imageHeight: 531,
     caption: 'Cross-sectional model of a porphyry copper-gold system showing the deposit architecture from lithocap to depth. The GMC concession exhibits this classic structure: iron oxide cap at surface, transition zone with supergene enrichment (where the 39.5% Cu grades originate), and primary sulfide mineralization confirmed at 60–65m depth by drilling. The porphyry target (Cu ± Au ± Mo) lies at 80–200m, within reach of Phase 1 diamond drilling.',
@@ -75,9 +75,9 @@ const metrics = [
 ]
 
 const mineralImages = [
-  { src: '/images/generated/iron-hero-data.png', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
-  { src: '/images/generated/copper-hero-data.png', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
-  { src: '/images/generated/gold-hero-data.png', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
+  { src: '/images/generated/iron-hero-data.webp', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
+  { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
+  { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
 ]
 
 const evidenceItems = [
@@ -115,7 +115,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
         >
           {heroImages.map((src, i) => (
             <SwiperSlide key={src}>
-              <div className="relative w-full h-screen">
+              <div className="relative w-full h-[100dvh]" style={{ height: '100dvh' }}>
                 <Image
                   src={src}
                   alt="GMC Mining Assets"
@@ -127,10 +127,10 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/10" />
                 <div className="absolute inset-0 flex items-start pt-[calc(16vh+60px)] md:pt-[calc(12vh+60px)]">
                   <div className="max-w-7xl mx-auto px-6 w-full">
-                    <h1 className="font-playfair text-4xl md:text-5xl lg:text-[3.5rem] text-white font-bold leading-[1.15] whitespace-nowrap mb-5">
+                    <h1 className="font-playfair text-[clamp(1.75rem,5vw,3.5rem)] text-white font-bold leading-[1.15] mb-5">
                       Bringing Precious Ores to the Light
                     </h1>
-                    <p className="text-white/80 text-lg md:text-xl max-w-2xl mb-8 leading-relaxed">
+                    <p className="text-white/80 text-base md:text-xl max-w-2xl mb-8 leading-relaxed">
                       Natural Wealth & Shared Prosperity - Mining with Purpose to Build Communities that Thrive.
                     </p>
                     <Link
@@ -156,17 +156,17 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       <section className="bg-bg-primary">
         <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5" data-aos="fade-up">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5" data-aos="fade-up">
             {metrics.map((m) => (
               <button
                 key={m.label}
                 onClick={() => setActiveEvidence(metricEvidence[m.label])}
                 className={`metric-card bg-white rounded-xl border-2 border-black/80 px-6 py-8 text-center cursor-pointer hover:scale-[1.02] transition-all duration-500 group shadow-[0_4px_6px_rgba(0,0,0,0.08),0_10px_24px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.12),0_20px_40px_rgba(0,0,0,0.18),0_2px_4px_rgba(0,0,0,0.08)]${m.label === metrics[0].label ? ' metric-card--pulse' : ''}`}
               >
-                <div className="relative z-[2] font-mono font-bold text-3xl md:text-[2.5rem] text-brand-navy leading-tight group-hover:text-white transition-colors duration-500">
+                <div className="relative z-[2] font-mono font-bold text-2xl min-[400px]:text-3xl md:text-[2.5rem] text-brand-navy leading-tight group-hover:text-white transition-colors duration-500">
                   {m.value}
                 </div>
-                <div className="relative z-[2] text-text-secondary text-xl mt-3 leading-snug group-hover:text-white/70 transition-colors duration-500">{m.label}</div>
+                <div className="relative z-[2] text-text-secondary text-base min-[400px]:text-xl mt-2 md:mt-3 leading-snug group-hover:text-white/70 transition-colors duration-500">{m.label}</div>
               </button>
             ))}
           </div>
@@ -223,7 +223,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       <section className="relative py-32 overflow-hidden">
         <Image
-          src="/images/generated/topo-texture-dark.png"
+          src="/images/generated/topo-texture-dark.webp"
           alt=""
           fill
           className="object-cover"
@@ -290,7 +290,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/generated/hero-landscape-enhanced.png"
+          src="/images/generated/hero-landscape-enhanced.webp"
           alt="Davao Oriental"
           fill
           className="object-cover"

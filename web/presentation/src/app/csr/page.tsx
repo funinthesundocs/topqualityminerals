@@ -41,7 +41,7 @@ export default function CSRPage() {
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/generated/hero-landscape-enhanced.png"
+          src="/images/generated/hero-landscape-enhanced.webp"
           alt="Davao Oriental landscape"
           fill
           className="object-cover"
@@ -62,7 +62,7 @@ export default function CSRPage() {
       {/* 60% Lumad metric */}
       <section className="section-padding bg-bg-surface">
         <div className="content-wrapper text-center max-w-3xl mx-auto">
-          <div data-aos="fade-up" className="font-mono font-bold text-7xl md:text-8xl text-brand-navy mb-4">60%</div>
+          <div data-aos="fade-up" className="font-mono font-bold text-5xl min-[400px]:text-7xl md:text-8xl text-brand-navy mb-4">60%</div>
           <div data-aos="fade-up" data-aos-delay="100" className="text-text-muted uppercase tracking-[0.2em] text-sm mb-8">Indigenous Lumad Workforce</div>
           <p data-aos="fade-up" data-aos-delay="200" className="text-text-secondary text-lg leading-relaxed">
             More than half of GMC&apos;s operational workforce are members of the indigenous Lumad community.
@@ -96,7 +96,7 @@ export default function CSRPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <div data-aos="fade-up" className="rounded-2xl overflow-hidden aspect-[4/3] relative">
               <Image
-                src="/images/site-photos/Creation.jpg"
+                src="/images/site-photos/Creation.webp"
                 alt="Environmental stewardship at GMC"
                 fill
                 className="object-cover"
@@ -105,7 +105,7 @@ export default function CSRPage() {
             </div>
             <div data-aos="fade-up" data-aos-delay="100" className="rounded-2xl overflow-hidden aspect-[4/3] relative">
               <Image
-                src="/images/site-photos/Mountains.jpg"
+                src="/images/site-photos/Mountains.webp"
                 alt="Davao Oriental mountains"
                 fill
                 className="object-cover"
@@ -119,7 +119,7 @@ export default function CSRPage() {
       {/* Vision banner */}
       <section className="relative py-24 overflow-hidden">
         <Image
-          src="/images/generated/topo-texture-dark.png"
+          src="/images/generated/topo-texture-dark.webp"
           alt=""
           fill
           className="object-cover"

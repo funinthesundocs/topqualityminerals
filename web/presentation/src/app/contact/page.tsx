@@ -50,7 +50,7 @@ export default function ContactPage() {
       {/* Hero */}
       <section className="relative h-[35vh] min-h-[250px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/generated/topo-texture-dark.png"
+          src="/images/generated/topo-texture-dark.webp"
           alt=""
           fill
           className="object-cover"
@@ -130,7 +130,7 @@ export default function ContactPage() {
                       required
                       value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition"
+                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition text-[16px] sm:text-sm"
                     />
                   </div>
                   <div>
@@ -140,7 +140,7 @@ export default function ContactPage() {
                       required
                       value={form.email}
                       onChange={e => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition"
+                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition text-[16px] sm:text-sm"
                     />
                   </div>
                   <div>
@@ -149,7 +149,7 @@ export default function ContactPage() {
                       type="text"
                       value={form.company}
                       onChange={e => setForm({ ...form, company: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition"
+                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition text-[16px] sm:text-sm"
                     />
                   </div>
                   <div>
@@ -159,7 +159,7 @@ export default function ContactPage() {
                       rows={5}
                       value={form.message}
                       onChange={e => setForm({ ...form, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition resize-none"
+                      className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:border-brand-navy transition resize-none text-[16px] sm:text-sm"
                     />
                   </div>
                   <button

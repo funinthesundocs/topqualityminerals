@@ -22,7 +22,7 @@ export const minerals = [
         symbol: 'Fe',
         grade: '67.31%',
         gradeNumber: 67.31,
-        image: '/images/generated/iron-hero-data.png',
+        image: '/images/generated/iron-hero-data.webp',
         lab: 'POSCO CONFIRMED',
         detail: 'Shipping-grade premium iron ore — comparable to top-tier Brazilian and Australian product. Very low phosphorus and sulfur, suitable for direct export to global steelmakers.',
         color: '#5C6370',
@@ -32,7 +32,7 @@ export const minerals = [
         symbol: 'Cu',
         grade: '39.5%',
         gradeNumber: 39.5,
-        image: '/images/generated/copper-hero-data.png',
+        image: '/images/generated/copper-hero-data.webp',
         lab: 'NEAR-CONCENTRATE',
         detail: 'Near-concentrate grade at surface — indicating strong supergene enrichment above the primary sulfide system. Four independent laboratories across a decade confirm this as a systematic feature.',
         color: '#B87333',
@@ -42,7 +42,7 @@ export const minerals = [
         symbol: 'Au',
         grade: '20.35 g/t',
         gradeNumber: 20.35,
-        image: '/images/generated/gold-hero-data.png',
+        image: '/images/generated/gold-hero-data.webp',
         lab: 'HIGHEST FIRE ASSAY',
         detail: 'Highest gold result ever recorded from this concession. Seven-year grade consistency (2017–2024) from the same laboratory confirms this is a systematic feature, not an anomaly.',
         color: '#C5922E',
@@ -172,7 +172,7 @@ export const riskItems: RiskItem[] = [
 export const visionContent = {
     headline: 'Building for Business to Prosper and Communities to Thrive',
     subheadline: '32 years remaining. A multi-generational partnership.',
-    backgroundImage: '/images/generated/hero-landscape-enhanced.png',
+    backgroundImage: '/images/generated/hero-landscape-enhanced.webp',
 } as const
 
 // ---------------------------------------------------------------------------
@@ -197,7 +197,7 @@ export const askContent = {
 export const openingContent = {
     headline: 'A Partnership Built for This Moment',
     subtitle: 'Genluiching Mining Corporation',
-    backgroundTexture: '/images/generated/topo-texture-dark.png',
+    backgroundTexture: '/images/generated/topo-texture-dark.webp',
 } as const
 
 // ---------------------------------------------------------------------------
@@ -207,12 +207,12 @@ export const homepageContent = {
     hero: {
         headline: 'A Polymetallic Deposit of Extraordinary Scale',
         subheadline: 'Nine laboratories. Five countries. One convergent geological model.',
-        backgroundImage: '/images/generated/hero-landscape-enhanced.png',
+        backgroundImage: '/images/generated/hero-landscape-enhanced.webp',
     },
     overview: {
         title: 'Genluiching Mining Corporation',
         body: 'A 5,906-hectare mining concession in Davao Oriental hosts a polymetallic deposit validated by nine independent laboratories across five countries and three geophysical methods — all converging on the same deposit model. POSCO International confirmed production-grade iron ore at 67.31% Fe. Nine laboratories confirmed near-concentrate copper at 39.5% Cu and gold up to 20.35 g/t Au. The Mineral Production Sharing Agreement is secured and active. The regulatory window is the most favorable in fifteen years.',
-        image: '/images/site-photos/aerial-concession-view.jpg',
+        image: '/images/site-photos/aerial-concession-view.webp',
     },
     partnership: {
         title: 'A Strategic Partnership',

@@ -10,17 +10,17 @@ import { evidencePortfolio } from '@/lib/content'
 
 const mineralCards = [
   {
-    src: '/images/generated/iron-hero-data.png',
+    src: '/images/generated/iron-hero-data.webp',
     alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed',
     detail: 'Shipping-grade premium iron ore — comparable to top-tier Brazilian and Australian product. Very low phosphorus and sulfur, suitable for direct export to global steelmakers.',
   },
   {
-    src: '/images/generated/copper-hero-data.png',
+    src: '/images/generated/copper-hero-data.webp',
     alt: 'Copper — 39.5% Cu, Near-Concentrate Grade',
     detail: 'Near-concentrate grade at surface — indicating strong supergene enrichment above the primary sulfide system. Four independent laboratories across a decade confirm this as a systematic feature.',
   },
   {
-    src: '/images/generated/gold-hero-data.png',
+    src: '/images/generated/gold-hero-data.webp',
     alt: 'Gold — 20.35 g/t Au, Highest Fire Assay',
     detail: 'Highest gold result ever recorded from this concession. Seven-year grade consistency (2017–2024) from the same laboratory confirms this is a systematic feature, not an anomaly.',
   },
@@ -32,7 +32,7 @@ export default function AssetsPage() {
       {/* Short Hero */}
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/site-photos/Mati Mining Site.jpeg"
+          src="/images/site-photos/Mati Mining Site.webp"
           alt="Mati Mining Site"
           fill
           className="object-cover"
@@ -64,7 +64,7 @@ export default function AssetsPage() {
           <div data-aos="fade-up" data-aos-delay="200" className="max-w-6xl mx-auto">
             <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/generated/cross-section-infographic.png"
+                src="/images/generated/cross-section-infographic.webp"
                 alt="Geological cross-section — iron oxide cap, transition zone, sulfide zone, porphyry target with 8 core samples"
                 width={1920}
                 height={1080}
@@ -132,7 +132,7 @@ export default function AssetsPage() {
           <div data-aos="fade-up" data-aos-delay="200" className="max-w-5xl mx-auto mb-16">
             <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/generated/evidence-portfolio.png"
+                src="/images/generated/evidence-portfolio.webp"
                 alt="Evidence portfolio — 9 laboratories across 5 countries with key data points"
                 width={1920}
                 height={1080}
@@ -180,12 +180,12 @@ export default function AssetsPage() {
           </h2>
           <div data-aos="fade-up" data-aos-delay="100" className="grid md:grid-cols-2 gap-8 mb-8">
             <div className="bg-white rounded-xl shadow-[0_2px_8px_rgba(12,25,38,0.06)] p-8">
-              <div className="font-mono font-bold text-5xl text-brand-navy">21.6M</div>
+              <div className="font-mono font-bold text-4xl min-[400px]:text-5xl text-brand-navy">21.6M</div>
               <div className="font-mono text-brand-copper text-lg mt-1">MT</div>
               <div className="text-text-muted text-sm uppercase tracking-widest mt-2">Copper Ore</div>
             </div>
             <div className="bg-white rounded-xl shadow-[0_2px_8px_rgba(12,25,38,0.06)] p-8">
-              <div className="font-mono font-bold text-5xl text-brand-navy">16M</div>
+              <div className="font-mono font-bold text-4xl min-[400px]:text-5xl text-brand-navy">16M</div>
               <div className="font-mono text-brand-iron text-lg mt-1">MT</div>
               <div className="text-text-muted text-sm uppercase tracking-widest mt-2">Iron Ore</div>
             </div>

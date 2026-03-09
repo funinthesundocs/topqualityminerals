@@ -28,6 +28,15 @@ export function NavBar() {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
+  // Close mobile menu on Escape
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileOpen) setMobileOpen(false)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [mobileOpen])
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
@@ -95,12 +104,12 @@ export function NavBar() {
         <div className={`lg:hidden fixed inset-0 top-[72px] bg-white transition-all duration-300 ${
           mobileOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}>
-          <div className="px-6 py-8 flex flex-col gap-1">
+          <div className="px-6 py-8 flex flex-col gap-1 pb-[calc(2rem+env(safe-area-inset-bottom,0px))]">
             {navLinks.map((link, i) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-text-primary text-lg font-medium py-3 border-b border-border/50 transition-colors hover:text-brand-navy"
+                className="text-text-primary text-lg font-medium py-4 min-h-[48px] flex items-center border-b border-border/50 transition-colors hover:text-brand-navy"
                 onClick={() => setMobileOpen(false)}
                 style={{ animationDelay: `${i * 50}ms` }}
               >
@@ -109,14 +118,14 @@ export function NavBar() {
             ))}
             <Link
               href="/presentation"
-              className="mt-6 bg-[#0A0F6B] text-white text-center py-3.5 rounded-xl font-semibold text-[15px]"
+              className="mt-6 bg-[#0A0F6B] text-white text-center py-4 min-h-[48px] flex items-center justify-center rounded-xl font-semibold text-[15px]"
               onClick={() => setMobileOpen(false)}
             >
               View Presentation
             </Link>
             <button
               onClick={() => { setMobileOpen(false); toggleAI() }}
-              className="mt-3 bg-brand-gold text-white text-center py-3.5 rounded-xl font-semibold text-[15px] flex items-center justify-center gap-2"
+              className="mt-3 bg-brand-gold text-white text-center py-4 min-h-[48px] rounded-xl font-semibold text-[15px] flex items-center justify-center gap-2"
             >
               <MessageCircle size={16} />
               Ask Nugget

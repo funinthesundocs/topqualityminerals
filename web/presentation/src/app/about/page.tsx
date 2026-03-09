@@ -28,7 +28,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/generated/operations-cinematic.png"
+          src="/images/generated/operations-cinematic.webp"
           alt="Mining operations at GMC"
           fill
           className="object-cover"
@@ -69,7 +69,7 @@ export default function AboutPage() {
           <div data-aos="fade-up" data-aos-delay="200" className="max-w-5xl mx-auto">
             <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/generated/timeline-infographic.png"
+                src="/images/generated/timeline-infographic.webp"
                 alt="GMC Timeline — 2007 MPSA Granted through 2025-2026 Partnership Ready"
                 width={1920}
                 height={1080}

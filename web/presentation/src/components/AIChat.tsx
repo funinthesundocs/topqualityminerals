@@ -526,7 +526,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   // Offline state
   if (!online) {
     return (
-      <div className={`flex flex-col items-center justify-center gap-4 ${fullPage ? 'h-[calc(100vh-72px)]' : 'h-full'}`}>
+      <div className={`flex flex-col items-center justify-center gap-4 ${fullPage ? 'h-[calc(100dvh-72px)]' : 'h-full'}`}>
         <div className="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center">
           <WifiOff className="text-amber-500" size={24} />
         </div>
@@ -544,8 +544,8 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const nuggetState: NuggetState = isListening ? 'listening' : isThinking ? 'thinking' : isTalking ? 'talking' : 'idle'
 
   const containerClass = fullPage
-    ? 'flex flex-col h-[calc(100vh-72px)] pt-[72px]'
-    : 'flex flex-col h-full'
+    ? 'flex flex-col h-[calc(100dvh-72px)] pt-[72px]'
+    : 'flex flex-col h-[100dvh] sm:h-full'
 
   return (
     <div className={containerClass}>
@@ -677,7 +677,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
       )}
 
       {/* Input Bar */}
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-3 border-t border-gray-100">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-3 border-t border-gray-100" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}>
         <input
           ref={inputRef}
           type="text"
@@ -685,7 +685,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Nugget..."
           disabled={isStreaming}
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-[16px] sm:text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
           autoFocus={fullPage}
         />
         {hasSpeechRecognition && (
@@ -693,22 +693,22 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
             type="button"
             onClick={isListening ? stopListening : startListening}
             disabled={isStreaming}
-            className={`flex items-center justify-center w-9 h-9 rounded-full border-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed ${
+            className={`flex items-center justify-center w-11 h-11 sm:w-9 sm:h-9 rounded-full border-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed ${
               isListening
                 ? 'bg-brand-navy border-brand-navy text-white animate-pulse'
                 : 'border-brand-navy/30 text-brand-navy hover:bg-brand-navy/5'
             }`}
             title={isListening ? 'Stop listening' : 'Voice input'}
           >
-            <Mic size={14} />
+            <Mic size={16} />
           </button>
         )}
         <button
           type="submit"
           disabled={!input.trim() || isStreaming}
-          className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-navy text-white hover:bg-brand-navy/90 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+          className="flex items-center justify-center w-11 h-11 sm:w-9 sm:h-9 rounded-lg bg-brand-navy text-white hover:bg-brand-navy/90 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <Send size={14} />
+          <Send size={16} />
         </button>
       </form>
     </div>

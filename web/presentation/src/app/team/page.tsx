@@ -13,7 +13,7 @@ export default function TeamPage() {
       {/* Hero */}
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/site-photos/Mountains.jpg"
+          src="/images/site-photos/Mountains.webp"
           alt="Davao Oriental"
           fill
           className="object-cover"

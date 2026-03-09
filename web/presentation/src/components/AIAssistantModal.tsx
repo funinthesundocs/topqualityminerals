@@ -40,7 +40,7 @@ export function AIAssistantModal() {
 
       {/* Slide-in Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-[9999] w-full max-w-[420px] bg-white shadow-2xl transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 bottom-0 z-[9999] w-full sm:max-w-[420px] bg-white shadow-2xl transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
