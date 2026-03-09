@@ -1,7 +1,6 @@
-import type { Context } from "@netlify/functions"
 import { createClient } from '@supabase/supabase-js'
 
-export default async (req: Request, _context: Context) => {
+export default async (req: Request) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 })
   }
@@ -9,38 +8,42 @@ export default async (req: Request, _context: Context) => {
   try {
     const { messages, question, voice } = await req.json()
 
-    // 1. Embed the question using Gemini
-    const geminiApiKey = Netlify.env.get('GEMINI_API_KEY')
+    // 1. RAG: embed question + retrieve context (graceful fallback if unavailable)
+    let context = ''
+    try {
+      const geminiApiKey = process.env.GEMINI_API_KEY
+      if (geminiApiKey) {
+        const embeddingRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiApiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content: { parts: [{ text: question }] },
+              outputDimensionality: 1536,
+            }),
+          }
+        )
+        const embeddingData = await embeddingRes.json()
 
-    const embeddingRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: { parts: [{ text: question }] },
-          outputDimensionality: 1536,
-        }),
+        if (embeddingData?.embedding?.values) {
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+          )
+          const { data: chunks } = await supabase.rpc('match_intelligence', {
+            query_embedding: embeddingData.embedding.values,
+            match_threshold: 0.3,
+            match_count: 10,
+          })
+          context = (chunks || [])
+            .map((c: any) => `[${c.track}/${c.category} | similarity: ${c.similarity?.toFixed(3)}]\n${c.content}`)
+            .join('\n\n---\n\n')
+        }
       }
-    )
-    const embeddingData = await embeddingRes.json()
-    const embedding = embeddingData.embedding.values
-
-    // 2. Query Supabase match_intelligence RPC
-    const supabase = createClient(
-      Netlify.env.get('NEXT_PUBLIC_SUPABASE_URL')!,
-      Netlify.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    )
-    const { data: chunks } = await supabase.rpc('match_intelligence', {
-      query_embedding: embedding,
-      match_threshold: 0.3,
-      match_count: 10,
-    })
-
-    // 3. Assemble context
-    const context = (chunks || [])
-      .map((c: any) => `[${c.track}/${c.category} | similarity: ${c.similarity?.toFixed(3)}]\n${c.content}`)
-      .join('\n\n---\n\n')
+    } catch {
+      // RAG unavailable — proceed without context
+    }
 
     const lengthGuidance = voice
       ? `CRITICAL LENGTH CONSTRAINT: This answer will be read aloud. You MUST keep your entire response under 75 words (about 30 seconds of speech). Give ONE key fact or answer — no lists, no bullet points, no elaboration. Think "elevator pitch sentence" not "briefing document". If the topic is complex, give the single most important point and say "I can elaborate if you'd like."`
@@ -62,7 +65,7 @@ ${lengthGuidance}`
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': Netlify.env.get('ANTHROPIC_API_KEY')!,
+        'x-api-key': process.env.ANTHROPIC_API_KEY!,
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },

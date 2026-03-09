@@ -1,8 +1,6 @@
-import type { Context } from "@netlify/functions"
-
 const VOICE_ID = 'dtSEyYGNJqjrtBArPCVZ' // Titan
 
-export default async (req: Request, _context: Context) => {
+export default async (req: Request) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 })
   }
@@ -21,7 +19,7 @@ export default async (req: Request, _context: Context) => {
       {
         method: 'POST',
         headers: {
-          'xi-api-key': Netlify.env.get('ELEVENLABS_API_KEY')!,
+          'xi-api-key': process.env.ELEVENLABS_API_KEY!,
           'Content-Type': 'application/json',
           Accept: 'audio/mpeg',
         },
