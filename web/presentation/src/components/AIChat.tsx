@@ -197,12 +197,10 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const [isStreaming, setIsStreaming] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [hasSpeechRecognition, setHasSpeechRecognition] = useState(false)
-  const [silenceCountdown, setSilenceCountdown] = useState<number | null>(null)
   const [voiceEnabled, setVoiceEnabled] = useState(true)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
   const [online, setOnline] = useState(true)
-  const [interimText, setInterimText] = useState('')
   const [deviceId] = useState(() => {
     if (typeof window === 'undefined') return ''
     let id = localStorage.getItem('gmc_device_id')
@@ -219,11 +217,6 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const speechRecognitionRef = useRef<any>(null)
   const audioQueueRef = useRef<AudioQueue | null>(null)
   const messageIdsRef = useRef<Set<string>>(new Set())
-  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
-  const transcriptRef = useRef('')
-  const finalTranscriptRef = useRef('')
-  const lastFinalRef = useRef('')
 
   // Online/offline detection
   useEffect(() => {
@@ -484,115 +477,58 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
     sendMessage(question)
   }
 
-  const clearSilenceTimer = useCallback(() => {
-    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null }
-    if (countdownIntervalRef.current) { clearInterval(countdownIntervalRef.current); countdownIntervalRef.current = null }
-    setSilenceCountdown(null)
-  }, [])
-
-  const startSilenceTimer = useCallback(() => {
-    clearSilenceTimer()
-    let remaining = 3
-    setSilenceCountdown(remaining)
-    countdownIntervalRef.current = setInterval(() => {
-      remaining--
-      if (remaining > 0) {
-        setSilenceCountdown(remaining)
-      }
-    }, 1000)
-    silenceTimerRef.current = setTimeout(() => {
-      clearSilenceTimer()
-      const text = transcriptRef.current.trim()
-      if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
-      setIsListening(false)
-      setInterimText('')
-      if (text) {
-        setInput('')
-        sendMessage(text, true)
-      }
-      transcriptRef.current = ''
-      finalTranscriptRef.current = ''
-      lastFinalRef.current = ''
-    }, 3500)
-  }, [clearSilenceTimer, sendMessage])
-
+  // Speech recognition — simple single-utterance approach.
+  // Tap mic → speak → it auto-detects end of speech → sends.
+  // No continuous mode, no interim accumulation, no duplication.
   const startListening = useCallback(() => {
     if (!speechRecognitionRef.current || isStreaming) return
-    const recognition = new speechRecognitionRef.current()
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.lang = 'en-US'
-    transcriptRef.current = ''
-
-    recognition.onstart = () => {
-      setIsListening(true)
-      finalTranscriptRef.current = ''
-      lastFinalRef.current = ''
-      setInterimText('')
+    // If already listening, stop
+    if (recognitionRef.current) {
+      recognitionRef.current.abort()
+      recognitionRef.current = null
+      setIsListening(false)
+      return
     }
 
+    const recognition = new speechRecognitionRef.current()
+    recognition.continuous = false      // single utterance — stops after silence
+    recognition.interimResults = false   // only fire when result is final
+    recognition.lang = 'en-US'
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => setIsListening(true)
+
     recognition.onresult = (event: any) => {
-      let interim = ''
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript
-        if (event.results[i].isFinal) {
-          // Deduplicate: some mobile browsers fire the same final result twice
-          if (transcript.trim() !== lastFinalRef.current.trim()) {
-            finalTranscriptRef.current += transcript
-            lastFinalRef.current = transcript
-          }
-        } else {
-          interim = transcript
-        }
+      // Single final result — take the first (and only) result
+      const transcript = event.results[0]?.[0]?.transcript?.trim()
+      if (transcript) {
+        setInput('')
+        sendMessage(transcript, true)
       }
-      const fullText = (finalTranscriptRef.current + interim).trim()
-      transcriptRef.current = fullText
-      setInput(finalTranscriptRef.current)
-      setInterimText(interim)
-      startSilenceTimer()
     }
 
     recognition.onerror = () => {
-      clearSilenceTimer()
       setIsListening(false)
-      setInterimText('')
-      transcriptRef.current = ''
-      finalTranscriptRef.current = ''
-      lastFinalRef.current = ''
+      recognitionRef.current = null
     }
 
     recognition.onend = () => {
-      if (transcriptRef.current.trim() && !silenceTimerRef.current) {
-        const text = transcriptRef.current.trim()
-        setIsListening(false)
-        setInterimText('')
-        setInput('')
-        sendMessage(text, true)
-        transcriptRef.current = ''
-        finalTranscriptRef.current = ''
-        lastFinalRef.current = ''
-      }
+      setIsListening(false)
+      recognitionRef.current = null
     }
 
     recognitionRef.current = recognition
     unlockAudio()
     recognition.start()
-  }, [isStreaming, sendMessage, startSilenceTimer, clearSilenceTimer])
+  }, [isStreaming, sendMessage])
 
   const stopListening = useCallback(() => {
-    clearSilenceTimer()
-    const text = transcriptRef.current.trim()
-    if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
-    setIsListening(false)
-    setInterimText('')
-    if (text) {
-      setInput('')
-      sendMessage(text, true)
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+      recognitionRef.current = null
     }
-    transcriptRef.current = ''
-    finalTranscriptRef.current = ''
-    lastFinalRef.current = ''
-  }, [clearSilenceTimer, sendMessage])
+    setIsListening(false)
+  }, [])
 
   // Offline state
   if (!online) {
@@ -743,33 +679,22 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
       {isListening && (
         <div className="flex items-center justify-center gap-2 py-2 text-xs text-brand-navy">
           <span className="w-2 h-2 bg-brand-navy rounded-full animate-pulse" />
-          {silenceCountdown !== null
-            ? <span className="text-text-muted">Sending in {silenceCountdown}...</span>
-            : 'Listening...'
-          }
+          Listening...
         </div>
       )}
 
       {/* Input Bar */}
       <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-3 border-t border-gray-100" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}>
-        <div className="flex-1 relative">
-          <input
-            ref={inputRef}
-            type="text"
-            value={isListening ? input + interimText : input}
-            onChange={(e) => { setInput(e.target.value); setInterimText('') }}
-            placeholder="Ask Nugget..."
-            disabled={isStreaming}
-            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-[16px] sm:text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
-            autoFocus={fullPage}
-          />
-          {isListening && interimText && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-[16px] sm:text-sm whitespace-nowrap overflow-hidden">
-              <span className="invisible">{input}</span>
-              <span className="text-text-muted/50 italic">{interimText}</span>
-            </div>
-          )}
-        </div>
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={isListening ? 'Listening...' : 'Ask Nugget...'}
+          disabled={isStreaming || isListening}
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-[16px] sm:text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
+          autoFocus={fullPage}
+        />
         {hasSpeechRecognition && (
           <button
             type="button"
