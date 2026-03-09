@@ -1,8 +1,14 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { DepositCrossSection } from '@/components/DepositCrossSection'
-import { CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { CheckCircle, AlertTriangle, ArrowRight, ChevronDown, Handshake, Users, MapPin } from 'lucide-react'
+
+/* ------------------------------------------------------------------ */
+/* PRESENTATION — 8-section scroll-snap, projector-ready               */
+/* Gemini images ARE the slides. No text overlaid on baked-in content. */
+/* ------------------------------------------------------------------ */
 
 const sections = [
   'Opening', 'The Opportunity', 'The Alignment', 'The Proof',
@@ -20,7 +26,6 @@ function CountUp({ target, suffix = '' }: { target: string; suffix?: string }) {
       if (entry.isIntersecting) {
         const numericPart = target.replace(/[^0-9.]/g, '')
         const num = parseFloat(numericPart)
-        const prefix = target.replace(numericPart, '').replace(/[^,]/g, '')
         if (isNaN(num)) { setValue(target); return }
         const duration = 1500
         const steps = 40
@@ -39,7 +44,7 @@ function CountUp({ target, suffix = '' }: { target: string; suffix?: string }) {
           }
           if (step >= steps) {
             clearInterval(interval)
-            setValue(target.replace(suffix, ''))
+            setValue(target.replace(suffix, '').trim())
           }
         }, stepTime)
         observer.disconnect()
@@ -50,7 +55,30 @@ function CountUp({ target, suffix = '' }: { target: string; suffix?: string }) {
     return () => observer.disconnect()
   }, [target, suffix])
 
-  return <div ref={ref} className="font-mono font-bold text-5xl md:text-7xl text-brand-navy projector-scale">{value}{suffix}</div>
+  return (
+    <div ref={ref} className="font-mono font-bold text-5xl md:text-7xl text-white leading-none">
+      {value}<span className="text-brand-gold">{suffix}</span>
+    </div>
+  )
+}
+
+function RiskRow({ status, title, desc }: { status: 'green' | 'amber'; title: string; desc: string }) {
+  const isGreen = status === 'green'
+  return (
+    <div className="flex items-start gap-5 py-5">
+      <div className="flex-shrink-0 mt-1">
+        <div className={`w-4 h-4 rounded-full ${isGreen ? 'bg-success shadow-[0_0_12px_rgba(52,211,153,0.5)]' : 'bg-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.4)]'}`}>
+          {isGreen && (
+            <div className="w-4 h-4 rounded-full bg-success animate-pulse" />
+          )}
+        </div>
+      </div>
+      <div>
+        <h3 className="text-white font-semibold text-lg">{title}</h3>
+        <p className="text-white/50 text-sm mt-1">{desc}</p>
+      </div>
+    </div>
+  )
 }
 
 export default function PresentationPage() {
@@ -87,7 +115,7 @@ export default function PresentationPage() {
     const container = containerRef.current
     if (!container) return
     const sectionEls = container.querySelectorAll('[data-section]')
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
       e.preventDefault()
       const next = Math.min(currentSection + 1, sections.length - 1)
       sectionEls[next]?.scrollIntoView({ behavior: 'smooth' })
@@ -110,220 +138,317 @@ export default function PresentationPage() {
       <style>{`nav, footer { display: none !important; }`}</style>
 
       {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-border">
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-white/10">
         <div
-          className="h-full bg-brand-navy transition-all duration-500"
+          className="h-full bg-brand-gold transition-all duration-500"
           style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
         />
       </div>
 
       {/* Section counter */}
-      <div className="fixed bottom-6 right-6 z-50 font-mono text-sm text-text-muted bg-white/90 backdrop-blur rounded-full px-3 py-1 shadow-sm">
+      <div className="fixed bottom-6 right-6 z-50 font-mono text-sm text-white/60 bg-black/40 backdrop-blur rounded-full px-3 py-1">
         {currentSection + 1} / {sections.length}
       </div>
 
       {/* Scroll-snap container */}
       <div
         ref={containerRef}
-        className="h-screen overflow-y-auto snap-y snap-mandatory md:snap-always"
+        className="h-screen overflow-y-auto snap-y snap-mandatory"
         style={{ scrollSnapType: 'y mandatory' }}
       >
-        {/* Section 1: Opening */}
-        <section data-section="0" className="min-h-screen flex items-center justify-center snap-start relative"
-          style={{ backgroundImage: `url('/images/site-photos/Mountains.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-          <div className="relative z-10 text-center px-6">
-            <h1 className="font-playfair font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-12 projector-scale">
+        {/* ============================================================ */}
+        {/* SECTION 1 — OPENING                                          */}
+        {/* Dark + topo texture + counting metrics                       */}
+        {/* ============================================================ */}
+        <section data-section="0" className="min-h-screen flex items-center justify-center snap-start relative bg-[#0C1926]">
+          <Image
+            src="/images/generated/topo-texture-dark.png"
+            alt=""
+            fill
+            className="object-cover opacity-30"
+            sizes="100vw"
+          />
+          <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            <h1 className="font-playfair font-bold text-4xl md:text-6xl lg:text-7xl text-white mb-4 leading-tight">
               A Partnership Built for This Moment
             </h1>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <p className="text-brand-gold text-xl md:text-2xl font-medium tracking-wide mb-16">
+              Genluiching Mining Corporation
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               {[
                 { target: '5,906', suffix: ' ha', label: 'Concession' },
-                { target: '9', label: 'Labs' },
-                { target: '8', label: 'Drill Holes' },
+                { target: '9', suffix: '', label: 'Labs' },
+                { target: '8', suffix: '', label: 'Core Samples' },
                 { target: '493', suffix: 'm', label: 'Drilled' },
               ].map(m => (
                 <div key={m.label} className="text-center">
                   <CountUp target={m.target} suffix={m.suffix} />
-                  <div className="text-white/70 text-sm uppercase tracking-widest mt-2">{m.label}</div>
+                  <div className="text-white/40 text-xs uppercase tracking-[0.2em] mt-3">{m.label}</div>
                 </div>
               ))}
             </div>
           </div>
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+            <ChevronDown className="text-white/30" size={28} />
+          </div>
         </section>
 
-        {/* Section 2: The Opportunity */}
+        {/* ============================================================ */}
+        {/* SECTION 2 — THE OPPORTUNITY                                  */}
+        {/* Three Gemini mineral images displayed LARGE as cards          */}
+        {/* Images have baked-in text — DO NOT overlay                    */}
+        {/* ============================================================ */}
         <section data-section="1" className="min-h-screen flex items-center snap-start bg-white">
-          <div className="content-wrapper w-full">
-            <h2 className="text-3xl md:text-5xl font-bold text-text-primary text-center mb-16 projector-scale">The Opportunity</h2>
-            <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto mb-16">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-text-primary text-center mb-12">
+              The Opportunity
+            </h2>
+            <div className="grid md:grid-cols-3 gap-5 max-w-6xl mx-auto mb-12">
               {[
-                { value: '67.31% Fe', desc: 'Production-grade iron ore. POSCO International confirmed.' },
-                { value: '39.5% Cu', desc: 'Near-concentrate copper. Four laboratories across a decade.' },
-                { value: '20.35 g/t Au', desc: 'Highest gold from fire assay. By-product from copper processing.' },
-              ].map(m => (
-                <div key={m.value} className="text-center">
-                  <div className="font-mono font-bold text-4xl md:text-5xl text-brand-navy projector-scale">{m.value}</div>
-                  <p className="text-text-secondary mt-4 leading-relaxed">{m.desc}</p>
+                { src: '/images/generated/iron-hero-data.png', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
+                { src: '/images/generated/copper-hero-data.png', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
+                { src: '/images/generated/gold-hero-data.png', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
+              ].map((img, i) => (
+                <div
+                  key={img.src}
+                  className="relative rounded-2xl overflow-hidden shadow-lg aspect-[16/10]"
+                  style={{ animationDelay: `${i * 150}ms` }}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                  />
                 </div>
               ))}
             </div>
-            <p className="text-center text-text-secondary max-w-3xl mx-auto text-lg">
-              21.6 million metric tons of copper ore. 16 million metric tons of iron ore.
-              <br /><span className="font-semibold text-text-primary">From less than 9% of the concession explored.</span>
-            </p>
-          </div>
-        </section>
-
-        {/* Section 3: The Alignment */}
-        <section data-section="2" className="min-h-screen flex items-center snap-start bg-bg-surface">
-          <div className="content-wrapper w-full">
-            <h2 className="text-3xl md:text-5xl font-bold text-text-primary text-center mb-16 projector-scale">The Alignment</h2>
-            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-12">
-              <div className="bg-white rounded-xl p-8 shadow-[0_2px_8px_rgba(12,25,38,0.06)]">
-                <h3 className="font-bold text-brand-navy text-xl mb-6">What GMC Brings</h3>
-                <ul className="space-y-4 text-text-secondary">
-                  {['MPSA — 5,906 hectares, active', '9-lab validated deposit', 'Community — 60% Lumad workforce', 'MGB-approved operator', '15+ years site knowledge'].map(item => (
-                    <li key={item} className="flex items-start gap-3">
-                      <CheckCircle className="text-success flex-shrink-0 mt-0.5" size={18} />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-white rounded-xl p-8 shadow-[0_2px_8px_rgba(12,25,38,0.06)]">
-                <h3 className="font-bold text-brand-navy text-xl mb-6">What a Strategic Partner Brings</h3>
-                <ul className="space-y-4 text-text-secondary">
-                  {['Construction capability', 'Processing plant expertise', 'Energy supply infrastructure', 'Technology and data science', 'Financial capacity for full development'].map(item => (
-                    <li key={item} className="flex items-start gap-3">
-                      <div className="w-2 h-2 rounded-full bg-brand-gold mt-2 flex-shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="bg-brand-navy/5 border border-brand-navy/10 rounded-xl p-8 max-w-4xl mx-auto text-center">
-              <p className="text-text-secondary leading-relaxed">
-                Aboitiz Construction built and has maintained the <span className="font-mono font-bold text-brand-navy">$1.7 billion</span> THPAL
-                nickel processing plant in Surigao del Norte for thirteen years. GMC offers the natural next step —
-                <span className="font-semibold text-text-primary"> from mining services to mining partnership.</span>
+            <div className="text-center">
+              <p className="font-playfair text-2xl md:text-3xl font-bold text-text-primary">
+                21.6 million metric tons. From less than 9% explored.
+              </p>
+              <p className="text-text-muted mt-2">
+                518 hectares explored of a 5,906-hectare concession
               </p>
             </div>
           </div>
         </section>
 
-        {/* Section 4: The Proof */}
-        <section data-section="3" className="min-h-screen flex items-center snap-start bg-white">
-          <div className="content-wrapper w-full">
-            <h2 className="text-3xl md:text-5xl font-bold text-text-primary text-center mb-12 projector-scale">The Proof</h2>
-            <DepositCrossSection />
-          </div>
-        </section>
-
-        {/* Section 5: The Plan */}
-        <section data-section="4" className="min-h-screen flex items-center snap-start bg-bg-surface">
-          <div className="content-wrapper w-full">
-            <h2 className="text-3xl md:text-5xl font-bold text-text-primary text-center mb-16 projector-scale">The Plan</h2>
-            <div className="max-w-4xl mx-auto">
-              {[
-                { phase: 1, title: 'Exploration Partnership', desc: 'Confirm copper at depth. Ship first vessel. Commercial permit.' },
-                { phase: 2, title: 'Feasibility Study', desc: 'JORC-compliant resource estimate. Bankable feasibility.' },
-                { phase: 3, title: 'Permitting', desc: 'ECC. Development permits. Full regulatory compliance.' },
-                { phase: 4, title: 'Plant Construction', desc: 'Processing facility. Infrastructure. AAAA capability deploys.' },
-                { phase: 5, title: 'Production', desc: 'Commercial operations. Maintenance model. Recurring revenue.' },
-              ].map((p, i) => (
-                <div key={p.phase} className="flex items-start gap-6 mb-8 last:mb-0">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-brand-navy text-white flex items-center justify-center font-mono font-bold text-lg">
-                    {p.phase}
-                  </div>
-                  <div className="flex-1 bg-white rounded-xl p-6 shadow-[0_2px_8px_rgba(12,25,38,0.06)]">
-                    <h3 className="font-bold text-text-primary text-lg">{p.title}</h3>
-                    <p className="text-text-secondary mt-1">{p.desc}</p>
-                  </div>
-                  {i < 4 && <div className="hidden md:block w-14 flex-shrink-0" />}
-                </div>
-              ))}
+        {/* ============================================================ */}
+        {/* SECTION 3 — THE ALIGNMENT                                    */}
+        {/* partnership-ecosystem.png IS the slide                        */}
+        {/* ============================================================ */}
+        <section data-section="2" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-10">
+              The Alignment
+            </h2>
+            <div className="max-w-5xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/images/generated/partnership-ecosystem.png"
+                  alt="GMC and Strategic Partner — complementary capabilities forming the natural next step"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto"
+                  sizes="(min-width: 1024px) 80vw, 100vw"
+                />
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Section 6: The Protection */}
-        <section data-section="5" className="min-h-screen flex items-center snap-start bg-white">
-          <div className="content-wrapper w-full text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-4 projector-scale">The Protection</h2>
-            <p className="text-text-secondary text-lg mb-16 max-w-2xl mx-auto">
+        {/* ============================================================ */}
+        {/* SECTION 4 — THE PROOF                                        */}
+        {/* cross-section-infographic.png fills viewport                  */}
+        {/* ============================================================ */}
+        <section data-section="3" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-10">
+              The Proof
+            </h2>
+            <div className="max-w-6xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/images/generated/cross-section-infographic.png"
+                  alt="Geological deposit cross-section — 8 core samples, iron oxide cap, transition zone, sulfide zone, porphyry target"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto"
+                  sizes="100vw"
+                />
+              </div>
+              <p className="text-white/30 text-xs text-center mt-4 italic">
+                Based on SGECS geological assessment filed with MGB Region XI, June 2025
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 5 — THE PLAN                                         */}
+        {/* 5-phase timeline with decision gates                         */}
+        {/* ============================================================ */}
+        <section data-section="4" className="min-h-screen flex items-center snap-start bg-white">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-text-primary text-center mb-16">
+              The Plan
+            </h2>
+            <div className="max-w-5xl mx-auto">
+              {/* Desktop horizontal timeline */}
+              <div className="hidden md:block relative">
+                {/* Connecting line */}
+                <div className="absolute top-7 left-[10%] right-[10%] h-0.5 bg-border" />
+                <div className="grid grid-cols-5 gap-4">
+                  {[
+                    { phase: 1, title: 'Exploration Partnership', desc: 'Confirm copper at depth. Ship first vessel.' },
+                    { phase: 2, title: 'Feasibility Study', desc: 'JORC-compliant resource estimate.' },
+                    { phase: 3, title: 'Permitting', desc: 'ECC. Development permits.' },
+                    { phase: 4, title: 'Plant Construction', desc: 'Processing facility. AAAA capability.' },
+                    { phase: 5, title: 'Production', desc: 'Commercial operations. Recurring revenue.' },
+                  ].map((p) => (
+                    <div key={p.phase} className="text-center relative">
+                      <div className="w-14 h-14 rounded-full bg-brand-navy text-white flex items-center justify-center font-mono font-bold text-lg mx-auto mb-4 relative z-10 shadow-lg">
+                        {p.phase}
+                      </div>
+                      <h3 className="font-bold text-text-primary text-sm mb-2">{p.title}</h3>
+                      <p className="text-text-secondary text-xs leading-relaxed">{p.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* Decision gates */}
+                <div className="flex justify-between mt-6 px-[15%]">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="text-center">
+                      <div className="w-3 h-3 rotate-45 bg-brand-gold mx-auto mb-1" />
+                      <span className="text-brand-gold text-[10px] uppercase tracking-widest font-semibold">Evaluate → Commit</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mobile vertical timeline */}
+              <div className="md:hidden space-y-6">
+                {[
+                  { phase: 1, title: 'Exploration Partnership', desc: 'Confirm copper at depth. Ship first vessel.' },
+                  { phase: 2, title: 'Feasibility Study', desc: 'JORC-compliant resource estimate.' },
+                  { phase: 3, title: 'Permitting', desc: 'ECC. Development permits.' },
+                  { phase: 4, title: 'Plant Construction', desc: 'Processing facility. AAAA capability.' },
+                  { phase: 5, title: 'Production', desc: 'Commercial operations. Recurring revenue.' },
+                ].map(p => (
+                  <div key={p.phase} className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-brand-navy text-white flex items-center justify-center font-mono font-bold flex-shrink-0">
+                      {p.phase}
+                    </div>
+                    <div className="bg-bg-surface rounded-xl p-5 flex-1">
+                      <h3 className="font-bold text-text-primary">{p.title}</h3>
+                      <p className="text-text-secondary text-sm mt-1">{p.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-center text-text-muted text-sm mt-10 font-medium">
+                Phase 1 commitment only. Decision gates at every stage.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 6 — THE PROTECTION                                   */}
+        {/* Risk status rows on dark + topo                              */}
+        {/* ============================================================ */}
+        <section data-section="5" className="min-h-screen flex items-center snap-start relative bg-[#0C1926]">
+          <Image
+            src="/images/generated/topo-texture-dark.png"
+            alt=""
+            fill
+            className="object-cover opacity-20"
+            sizes="100vw"
+          />
+          <div className="relative z-10 content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-4">
+              The Protection
+            </h2>
+            <p className="text-white/40 text-lg text-center mb-16 max-w-2xl mx-auto">
               We have already thought about everything you are about to ask
             </p>
-            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
-              {[
-                { status: 'green', label: 'FPIC', desc: 'Approved by indigenous communities' },
-                { status: 'green', label: 'MGB Status', desc: 'Director ORDER confirming GMC as operator' },
-                { status: 'green', label: 'Legal Standing', desc: 'Final court ruling in GMC favor' },
-              ].map(item => (
-                <div key={item.label} className="bg-success/5 border border-success/20 rounded-xl p-6">
-                  <CheckCircle className="text-success mx-auto mb-3" size={28} />
-                  <h3 className="font-bold text-text-primary">{item.label}</h3>
-                  <p className="text-text-secondary text-sm mt-1">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {[
-                { label: 'Copper at Depth', desc: 'Sulfide confirmed at 60-65m. Targeted drilling is Phase 1.' },
-                { label: 'Mercury', desc: 'Identified proactively. Minamata compliance from outset.' },
-              ].map(item => (
-                <div key={item.label} className="bg-amber/5 border border-amber/20 rounded-xl p-6">
-                  <AlertTriangle className="text-amber mx-auto mb-3" size={28} />
-                  <h3 className="font-bold text-text-primary">{item.label}</h3>
-                  <p className="text-text-secondary text-sm mt-1">{item.desc}</p>
-                </div>
-              ))}
+            <div className="max-w-3xl mx-auto divide-y divide-white/10">
+              <RiskRow status="green" title="FPIC Approval" desc="Approved by indigenous communities. 60% Lumad workforce. Years of genuine partnership." />
+              <RiskRow status="green" title="MGB Operator" desc="Director ORDER confirming GMC as authorized operator of MPSA 251(A)-2007-XI." />
+              <RiskRow status="green" title="Legal Standing" desc="Final court ruling on DMC-GMC dispute. Permanently resolved as a matter of law. Cannot be refiled." />
+              <RiskRow status="amber" title="Copper at Depth" desc="Sulfide minerals confirmed at 60–65m. Eight core samples validate the porphyry model. Phase 1 drilling priority." />
+              <RiskRow status="amber" title="Mercury Trace" desc="Identified proactively. 1,245–1,429 mg/kg in ore samples. Minamata Convention compliance required. Solvable engineering challenge." />
             </div>
           </div>
         </section>
 
-        {/* Section 7: The Vision */}
-        <section data-section="6" className="min-h-screen flex items-center justify-center snap-start relative"
-          style={{ backgroundImage: `url('/images/site-photos/Mountains.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-          <div className="relative z-10 text-center px-6">
-            <h2 className="font-playfair font-bold text-4xl md:text-6xl text-white mb-6 projector-scale">
-              Building for Business to Prosper<br />and Communities to Thrive
+        {/* ============================================================ */}
+        {/* SECTION 7 — THE VISION                                       */}
+        {/* hero-landscape-enhanced.png full bleed                       */}
+        {/* ============================================================ */}
+        <section data-section="6" className="min-h-screen flex items-center justify-center snap-start relative">
+          <Image
+            src="/images/generated/hero-landscape-enhanced.png"
+            alt="Davao Oriental — tropical mountains at golden hour"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/70" />
+          <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <h2 className="font-playfair font-bold text-4xl md:text-6xl text-white mb-6 leading-tight">
+              Building for Business to Prosper<br className="hidden md:block" />and Communities to Thrive
             </h2>
-            <p className="text-white/70 text-xl mt-8">
+            <p className="text-white/60 text-xl mt-8">
               <span className="font-mono font-bold text-white text-3xl">32</span> years remaining on MPSA.
               A multi-generational partnership.
             </p>
           </div>
         </section>
 
-        {/* Section 8: The Ask */}
+        {/* ============================================================ */}
+        {/* SECTION 8 — THE ASK                                          */}
+        {/* Clean white, extreme negative space                          */}
+        {/* ============================================================ */}
         <section data-section="7" className="min-h-screen flex items-center snap-start bg-white">
-          <div className="content-wrapper w-full text-center">
-            <h2 className="font-playfair font-bold text-4xl md:text-6xl text-text-primary mb-16 projector-scale">
+          <div className="content-wrapper w-full text-center py-16">
+            <h2 className="font-playfair font-bold text-4xl md:text-6xl text-brand-navy mb-16">
               The Next Step
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
               {[
-                { num: '01', title: 'Phase 1 Exploration Partnership' },
-                { num: '02', title: 'Technical Team Introduction' },
-                { num: '03', title: 'Joint Site Assessment' },
+                { Icon: Handshake, label: 'Phase 1 exploration partnership' },
+                { Icon: Users, label: 'Technical team introduction' },
+                { Icon: MapPin, label: 'Joint site assessment' },
               ].map(item => (
-                <div key={item.num} className="bg-bg-surface rounded-xl p-8">
-                  <div className="font-mono font-bold text-3xl text-brand-navy mb-3">{item.num}</div>
-                  <h3 className="font-bold text-text-primary text-lg">{item.title}</h3>
+                <div key={item.label} className="bg-bg-surface rounded-xl p-8">
+                  <item.Icon className="text-brand-gold mx-auto mb-4" size={32} />
+                  <h3 className="font-semibold text-text-primary text-lg">{item.label}</h3>
                 </div>
               ))}
             </div>
-            {online && (
-              <a
-                href="/advisor"
-                className="inline-flex items-center gap-2 text-text-muted hover:text-brand-navy transition-colors text-sm"
-              >
-                Have questions? Ask our AI advisor <ArrowRight size={14} />
-              </a>
-            )}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+              {online && (
+                <Link
+                  href="/advisor"
+                  className="inline-flex items-center gap-2 bg-brand-navy text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:bg-brand-navy/90 text-[15px]"
+                >
+                  Ask Our AI Advisor
+                  <ArrowRight size={16} />
+                </Link>
+              )}
+            </div>
+            <Image
+              src="/images/scraped/gmc/cropped-GMC-Logo-2-270x270.png"
+              alt="GMC"
+              width={48}
+              height={48}
+              className="mx-auto opacity-30"
+            />
           </div>
         </section>
       </div>

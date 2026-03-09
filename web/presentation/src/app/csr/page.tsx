@@ -1,35 +1,36 @@
-import { Metadata } from 'next'
-import { SectionHero } from '@/components/SectionHero'
-import { Trees, Users, Shield, Heart } from 'lucide-react'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'CSR — Genluiching Mining Corporation',
-  description: 'Community and environmental stewardship at Genluiching Mining Corporation.',
-}
+import Image from 'next/image'
+import { Shield, Leaf, Users, Heart } from 'lucide-react'
+
+/* ------------------------------------------------------------------ */
+/* CSR PAGE — Community & Sustainability                               */
+/* hero-landscape-enhanced.png as hero background                      */
+/* ------------------------------------------------------------------ */
 
 const pillars = [
   {
-    icon: Trees,
-    title: 'Environmental Stewardship',
-    desc: 'Progressive rehabilitation from the outset. Revegetation programs return mined areas to productive forest. Mercury identified proactively — Minamata Convention compliance built into operations from day one.',
-    color: 'bg-success',
-  },
-  {
-    icon: Users,
+    Icon: Users,
     title: 'Indigenous Community Partnership',
-    desc: 'Over 60% of GMC\'s workforce are indigenous Lumad community members. Free, Prior, and Informed Consent (FPIC) has been formally approved. The community is not just consulted — they are partners.',
+    desc: 'Over 60% of GMC\'s workforce are indigenous Lumad community members. They serve as mining laborers, road mappers, guides who know the terrain better than any surveyor, stockyard personnel, and property custodians.',
     color: 'bg-brand-navy',
   },
   {
-    icon: Shield,
-    title: 'Regulatory Excellence',
-    desc: 'Full compliance with MGB regulations. MPSA maintained in good standing since 2007. Annual environmental reporting. SDMP (Social Development and Management Program) contributions sustained throughout operations.',
+    Icon: Shield,
+    title: 'FPIC Approved',
+    desc: 'Free, Prior, and Informed Consent has been formally approved through the NCIP process. The community is not just consulted — they are partners in every operational decision.',
+    color: 'bg-success',
+  },
+  {
+    Icon: Leaf,
+    title: 'Environmental Stewardship',
+    desc: 'GMC operates a forest tree nursery at the Mati site, tended by the Lumad community. Wild pine, hardwood, and fruit-bearing seedlings are propagated in alternative green areas. Progressive reclamation ensures the land is returned to productive use.',
     color: 'bg-brand-copper',
   },
   {
-    icon: Heart,
-    title: 'Community Development',
-    desc: 'Local employment, infrastructure support, and education initiatives. Mining operations that serve the long-term interests of Tarragona and Mati City communities — building for business to prosper and communities to thrive.',
+    Icon: Heart,
+    title: 'Community Foundation',
+    desc: 'Planned programs include literacy education, livelihood training in agriculture and trades, enterprise creation and marketing support for Lumad-led businesses, socialized housing, and primary health care.',
     color: 'bg-brand-gold',
   },
 ]
@@ -37,32 +38,49 @@ const pillars = [
 export default function CSRPage() {
   return (
     <>
-      <SectionHero
-        headline="Caring for Creation"
-        subheadline="Responsible mining that serves communities and protects the environment"
-        imageSrc="/images/site-photos/Creation.jpg"
-        height="h-[50vh]"
-      />
+      {/* Hero */}
+      <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
+        <Image
+          src="/images/generated/hero-landscape-enhanced.png"
+          alt="Davao Oriental landscape"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+        <div className="relative z-10 text-center px-6">
+          <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3">
+            Caring for Creation
+          </h1>
+          <p className="text-white/70 text-lg md:text-xl">
+            Responsible mining that serves communities and protects the environment
+          </p>
+        </div>
+      </section>
 
-      {/* FPIC highlight */}
-      <section className="bg-success/5 border-y border-success/20">
-        <div className="content-wrapper py-12 text-center">
-          <div className="inline-flex items-center gap-3 bg-white rounded-full px-6 py-3 shadow-sm">
-            <Shield className="text-success" size={20} />
-            <span className="font-semibold text-success">FPIC Approved</span>
-            <span className="text-text-secondary text-sm">— Free, Prior, and Informed Consent granted by indigenous communities</span>
-          </div>
+      {/* 60% Lumad metric */}
+      <section className="section-padding bg-bg-surface">
+        <div className="content-wrapper text-center max-w-3xl mx-auto">
+          <div data-aos="fade-up" className="font-mono font-bold text-7xl md:text-8xl text-brand-navy mb-4">60%</div>
+          <div data-aos="fade-up" data-aos-delay="100" className="text-text-muted uppercase tracking-[0.2em] text-sm mb-8">Indigenous Lumad Workforce</div>
+          <p data-aos="fade-up" data-aos-delay="200" className="text-text-secondary text-lg leading-relaxed">
+            More than half of GMC&apos;s operational workforce are members of the indigenous Lumad community.
+            This is not a target or aspiration — it is a reflection of how GMC has operated from the beginning.
+            The community&apos;s knowledge of the land, combined with formal geological science, creates an
+            exploration capability that neither could achieve alone.
+          </p>
         </div>
       </section>
 
       {/* Pillars */}
       <section className="section-padding">
         <div className="content-wrapper">
-          <div className="grid md:grid-cols-2 gap-8">
-            {pillars.map(p => (
-              <div key={p.title} className="bg-white rounded-xl shadow-[0_2px_8px_rgba(12,25,38,0.06)] p-8 hover:shadow-md transition-shadow">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {pillars.map((p, i) => (
+              <div key={p.title} data-aos="fade-up" data-aos-delay={i * 100} className="bg-white rounded-xl shadow-[0_2px_8px_rgba(12,25,38,0.06)] p-8 hover:shadow-md transition-shadow">
                 <div className={`w-12 h-12 ${p.color} rounded-lg flex items-center justify-center mb-6`}>
-                  <p.icon className="text-white" size={24} />
+                  <p.Icon className="text-white" size={24} />
                 </div>
                 <h3 className="text-xl font-bold text-text-primary mb-3">{p.title}</h3>
                 <p className="text-text-secondary leading-relaxed">{p.desc}</p>
@@ -72,37 +90,49 @@ export default function CSRPage() {
         </div>
       </section>
 
-      {/* Workforce highlight */}
+      {/* Photo row */}
       <section className="section-padding bg-bg-surface">
-        <div className="content-wrapper text-center max-w-3xl mx-auto">
-          <div className="font-mono font-bold text-6xl text-brand-navy mb-4">60%</div>
-          <div className="text-text-muted uppercase tracking-widest text-sm mb-6">Indigenous Lumad Workforce</div>
-          <p className="text-text-secondary leading-relaxed">
-            More than half of GMC&apos;s operational workforce are members of the indigenous Lumad community.
-            This is not a target or aspiration — it is a reflection of how GMC has operated from the beginning.
-            The community&apos;s knowledge of the land, combined with formal geological science, creates an
-            exploration capability that neither could achieve alone.
-          </p>
-        </div>
-      </section>
-
-      {/* Photo gallery */}
-      <section className="section-padding">
         <div className="content-wrapper">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="rounded-xl overflow-hidden aspect-[4/3]">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url('/images/site-photos/Mining 6.jpeg')` }}
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div data-aos="fade-up" className="rounded-2xl overflow-hidden aspect-[4/3] relative">
+              <Image
+                src="/images/site-photos/Creation.jpg"
+                alt="Environmental stewardship at GMC"
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
               />
             </div>
-            <div className="rounded-xl overflow-hidden aspect-[4/3]">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url('/images/site-photos/Creation.jpg')` }}
+            <div data-aos="fade-up" data-aos-delay="100" className="rounded-2xl overflow-hidden aspect-[4/3] relative">
+              <Image
+                src="/images/site-photos/Mountains.jpg"
+                alt="Davao Oriental mountains"
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Vision banner */}
+      <section className="relative py-24 overflow-hidden">
+        <Image
+          src="/images/generated/topo-texture-dark.png"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-[#0C1926]/85" />
+        <div className="relative content-wrapper text-center">
+          <h2 data-aos="fade-up" className="font-playfair text-3xl md:text-4xl font-bold text-white mb-4 max-w-3xl mx-auto">
+            Building for Communities to Thrive
+          </h2>
+          <p data-aos="fade-up" data-aos-delay="100" className="text-white/50 text-lg max-w-2xl mx-auto">
+            When a strategic partner joins, the impact scales — from hundreds of families to thousands, from local employment to regional transformation.
+          </p>
         </div>
       </section>
     </>

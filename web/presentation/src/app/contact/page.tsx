@@ -1,8 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SectionHero } from '@/components/SectionHero'
+import Image from 'next/image'
 import { Send, MapPin, Mail, Phone } from 'lucide-react'
+
+/* ------------------------------------------------------------------ */
+/* CONTACT PAGE — Form + office info                                   */
+/* ------------------------------------------------------------------ */
 
 export default function ContactPage() {
   const [online, setOnline] = useState(true)
@@ -43,13 +47,28 @@ export default function ContactPage() {
 
   return (
     <>
-      <SectionHero headline="Contact Us" height="h-[40vh]" />
+      {/* Hero */}
+      <section className="relative h-[35vh] min-h-[250px] flex items-center justify-center overflow-hidden">
+        <Image
+          src="/images/generated/topo-texture-dark.png"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-[#0C1926]/80" />
+        <div className="relative z-10 text-center px-6">
+          <h1 className="font-playfair text-4xl md:text-5xl font-bold text-white mb-3">
+            Contact Us
+          </h1>
+        </div>
+      </section>
 
       <section className="section-padding">
         <div className="content-wrapper">
           <div className="grid lg:grid-cols-2 gap-16 max-w-5xl mx-auto">
             {/* Contact info */}
-            <div>
+            <div data-aos="fade-up">
               <h2 className="text-3xl font-bold text-text-primary mb-8">Get in Touch</h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -57,8 +76,8 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-text-primary">Makati Office</h3>
                     <p className="text-text-secondary text-sm mt-1">
-                      Unit 1411 Alaya Tower One<br />
-                      6767 Alaya Avenue<br />
+                      Unit 1411 Ayala Tower One<br />
+                      6767 Ayala Avenue<br />
                       Makati City 1226, Philippines
                     </p>
                   </div>
@@ -93,7 +112,7 @@ export default function ContactPage() {
             </div>
 
             {/* Form or offline fallback */}
-            <div>
+            <div data-aos="fade-up" data-aos-delay="100">
               {!online ? (
                 <div className="bg-bg-surface rounded-xl p-8 text-center">
                   <h3 className="text-xl font-bold text-text-primary mb-4">Currently Offline</h3>

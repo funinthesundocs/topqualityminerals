@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-interface DrillHole {
+interface CoreSample {
   id: string
   x: number
   depth: number
@@ -11,7 +11,7 @@ interface DrillHole {
   key: boolean
 }
 
-const drillHoles: DrillHole[] = [
+const coreSamples: CoreSample[] = [
   { id: 'DH-1', x: 200, depth: 28, highlights: ['36.58% Cu', '59.86% Fe'], color: '#B87333', key: false },
   { id: 'SBF-1A', x: 350, depth: 28, highlights: ['Iron mineralization'], color: '#5C6370', key: false },
   { id: 'SBF-1B', x: 400, depth: 55, highlights: ['Iron zone'], color: '#5C6370', key: false },
@@ -30,7 +30,7 @@ export function DepositCrossSection() {
 
   return (
     <div className="relative w-full">
-      <svg viewBox="0 0 1200 650" className="w-full h-auto" role="img" aria-label="Deposit cross-section showing drill holes and geological layers">
+      <svg viewBox="0 0 1200 650" className="w-full h-auto" role="img" aria-label="Deposit cross-section showing core samples and geological layers">
         {/* Background */}
         <rect x="0" y="0" width="1200" height="650" fill="#FAFBFC" />
 
@@ -56,8 +56,8 @@ export function DepositCrossSection() {
           Geophysical Target — 80-200m
         </text>
 
-        {/* Drill holes */}
-        {drillHoles.map(hole => {
+        {/* Core samples */}
+        {coreSamples.map(hole => {
           const endY = depthToY(hole.depth)
           const isHovered = hovered === hole.id
           return (
@@ -113,7 +113,7 @@ export function DepositCrossSection() {
 
         {/* Tooltip */}
         {hovered && (() => {
-          const hole = drillHoles.find(h => h.id === hovered)
+          const hole = coreSamples.find(h => h.id === hovered)
           if (!hole) return null
           const tw = 180
           const tx = Math.min(Math.max(hole.x - tw / 2, 10), 1200 - tw - 10)
@@ -157,7 +157,7 @@ export function DepositCrossSection() {
       {/* Captions */}
       <div className="mt-4 space-y-1 text-center">
         <p className="text-text-muted text-xs italic">
-          Schematic cross-section — drill hole depths to scale, horizontal positions approximate
+          Schematic cross-section — core sample depths to scale, horizontal positions approximate
         </p>
         <p className="text-text-muted text-xs">
           Based on SGECS geological assessment filed with MGB Region XI, June 2025
