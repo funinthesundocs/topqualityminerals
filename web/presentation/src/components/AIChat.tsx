@@ -202,6 +202,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
   const [online, setOnline] = useState(true)
+  const [interimText, setInterimText] = useState('')
   const [deviceId] = useState(() => {
     if (typeof window === 'undefined') return ''
     let id = localStorage.getItem('gmc_device_id')
@@ -221,6 +222,8 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const transcriptRef = useRef('')
+  const finalTranscriptRef = useRef('')
+  const lastFinalRef = useRef('')
 
   // Online/offline detection
   useEffect(() => {
@@ -502,11 +505,14 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
       const text = transcriptRef.current.trim()
       if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
       setIsListening(false)
+      setInterimText('')
       if (text) {
         setInput('')
         sendMessage(text, true)
       }
       transcriptRef.current = ''
+      finalTranscriptRef.current = ''
+      lastFinalRef.current = ''
     }, 3500)
   }, [clearSilenceTimer, sendMessage])
 
@@ -518,38 +524,53 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
     recognition.lang = 'en-US'
     transcriptRef.current = ''
 
-    recognition.onstart = () => setIsListening(true)
+    recognition.onstart = () => {
+      setIsListening(true)
+      finalTranscriptRef.current = ''
+      lastFinalRef.current = ''
+      setInterimText('')
+    }
 
     recognition.onresult = (event: any) => {
-      let finalTranscript = ''
-      let interimTranscript = ''
-      for (let i = 0; i < event.results.length; i++) {
-        const result = event.results[i]
-        if (result.isFinal) {
-          finalTranscript += result[0].transcript
+      let interim = ''
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          // Deduplicate: some mobile browsers fire the same final result twice
+          if (transcript.trim() !== lastFinalRef.current.trim()) {
+            finalTranscriptRef.current += transcript
+            lastFinalRef.current = transcript
+          }
         } else {
-          interimTranscript += result[0].transcript
+          interim = transcript
         }
       }
-      const fullText = (finalTranscript + interimTranscript).trim()
+      const fullText = (finalTranscriptRef.current + interim).trim()
       transcriptRef.current = fullText
-      setInput(fullText)
+      setInput(finalTranscriptRef.current)
+      setInterimText(interim)
       startSilenceTimer()
     }
 
     recognition.onerror = () => {
       clearSilenceTimer()
       setIsListening(false)
+      setInterimText('')
       transcriptRef.current = ''
+      finalTranscriptRef.current = ''
+      lastFinalRef.current = ''
     }
 
     recognition.onend = () => {
       if (transcriptRef.current.trim() && !silenceTimerRef.current) {
         const text = transcriptRef.current.trim()
         setIsListening(false)
+        setInterimText('')
         setInput('')
         sendMessage(text, true)
         transcriptRef.current = ''
+        finalTranscriptRef.current = ''
+        lastFinalRef.current = ''
       }
     }
 
@@ -563,11 +584,14 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
     const text = transcriptRef.current.trim()
     if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
     setIsListening(false)
+    setInterimText('')
     if (text) {
       setInput('')
       sendMessage(text, true)
     }
     transcriptRef.current = ''
+    finalTranscriptRef.current = ''
+    lastFinalRef.current = ''
   }, [clearSilenceTimer, sendMessage])
 
   // Offline state
@@ -728,16 +752,24 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
 
       {/* Input Bar */}
       <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-3 border-t border-gray-100" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}>
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Nugget..."
-          disabled={isStreaming}
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-[16px] sm:text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
-          autoFocus={fullPage}
-        />
+        <div className="flex-1 relative">
+          <input
+            ref={inputRef}
+            type="text"
+            value={isListening ? input + interimText : input}
+            onChange={(e) => { setInput(e.target.value); setInterimText('') }}
+            placeholder="Ask Nugget..."
+            disabled={isStreaming}
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-[16px] sm:text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
+            autoFocus={fullPage}
+          />
+          {isListening && interimText && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-[16px] sm:text-sm whitespace-nowrap overflow-hidden">
+              <span className="invisible">{input}</span>
+              <span className="text-text-muted/50 italic">{interimText}</span>
+            </div>
+          )}
+        </div>
         {hasSpeechRecognition && (
           <button
             type="button"
