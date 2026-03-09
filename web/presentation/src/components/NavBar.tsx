@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, MessageCircle } from 'lucide-react'
+import { useAIAssistant } from '@/contexts/AIAssistantContext'
 
 const navLinks = [
   { href: '/about', label: 'About' },
@@ -16,6 +17,7 @@ const navLinks = [
 
 export function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { toggle: toggleAI } = useAIAssistant()
 
   useEffect(() => {
     if (mobileOpen) {
@@ -35,14 +37,14 @@ export function NavBar() {
             <Image
               src="/images/scraped/gmc/cropped-GMC-Logo-2-270x270.png"
               alt="GMC"
-              width={40}
-              height={40}
+              width={46}
+              height={46}
             />
             <div className="flex flex-col">
-              <span className="font-playfair font-bold text-lg leading-tight text-brand-navy">
+              <span className="font-playfair font-bold text-[22px] leading-tight text-brand-navy">
                 GMC
               </span>
-              <span className="hidden sm:block text-[10px] tracking-[0.15em] uppercase leading-tight text-text-muted">
+              <span className="hidden sm:block text-[14px] tracking-[0.15em] uppercase leading-tight text-text-muted">
                 Genluiching Mining
               </span>
             </div>
@@ -54,17 +56,25 @@ export function NavBar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-[14px] font-medium tracking-wide transition-all duration-300 rounded-lg text-text-primary hover:text-brand-navy hover:bg-brand-navy/5"
+                className="px-4 py-2 text-[16px] font-medium tracking-wide transition-all duration-300 rounded-lg text-text-primary hover:text-brand-navy hover:bg-brand-navy/5"
               >
                 {link.label}
               </Link>
             ))}
             <Link
               href="/presentation"
-              className="ml-3 px-5 py-2 text-[13px] font-semibold tracking-wide rounded-full transition-all duration-300 bg-[#0A0F6B] text-white hover:bg-[#0A0F6B]/90"
+              className="ml-3 px-5 py-2 text-[16px] font-semibold tracking-wide rounded-full transition-all duration-300 bg-[#0A0F6B] text-white hover:bg-[#0A0F6B]/90"
             >
               View Presentation
             </Link>
+            <button
+              onClick={toggleAI}
+              className="ml-2 flex items-center gap-1.5 px-4 py-2 text-[16px] font-semibold tracking-wide rounded-full transition-all duration-300 bg-brand-gold text-white hover:bg-brand-gold/90"
+              aria-label="Ask Nugget"
+            >
+              <MessageCircle size={14} />
+              Ask Nugget
+            </button>
           </div>
 
           {/* Mobile Hamburger */}
@@ -104,6 +114,13 @@ export function NavBar() {
             >
               View Presentation
             </Link>
+            <button
+              onClick={() => { setMobileOpen(false); toggleAI() }}
+              className="mt-3 bg-brand-gold text-white text-center py-3.5 rounded-xl font-semibold text-[15px] flex items-center justify-center gap-2"
+            >
+              <MessageCircle size={16} />
+              Ask Nugget
+            </button>
           </div>
         </div>
       </nav>

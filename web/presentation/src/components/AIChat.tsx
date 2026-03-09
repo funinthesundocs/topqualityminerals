@@ -1,0 +1,716 @@
+'use client'
+
+import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
+import Image from 'next/image'
+import { Send, User, Mic, Volume2, MessageCircle, WifiOff, X } from 'lucide-react'
+import { NuggetStatus, type NuggetState } from './NuggetStatus'
+import { supabase } from '@/lib/supabase'
+
+interface DbMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  sender_name: string
+  created_at: string
+}
+
+interface Message {
+  id?: string
+  role: 'user' | 'assistant'
+  content: string
+  sender_name?: string
+  created_at?: string
+}
+
+const SUGGESTED_QUESTIONS = [
+  'What minerals have been confirmed at the GMC concession?',
+  'How large is the concession and where is it located?',
+  'What laboratories have validated the deposit?',
+  'What is the partnership opportunity?',
+  'Tell me about the copper and gold grades',
+]
+
+function formatMarkdown(text: string): string {
+  let html = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+  html = html.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+  html = html.replace(/`([^`]+)`/g, '<code class="font-mono bg-gray-100 px-1 py-0.5 rounded text-sm">$1</code>')
+  html = html.replace(/\n/g, '<br />')
+  html = html.replace(/((?:^|<br \/>)\s*[-*]\s+.+(?:<br \/>\s*[-*]\s+.+)*)/g, (match) => {
+    const items = match
+      .split(/<br \/>/)
+      .filter(line => line.trim().match(/^[-*]\s+/))
+      .map(line => `<li class="ml-4">${line.trim().replace(/^[-*]\s+/, '')}</li>`)
+      .join('')
+    return `<ul class="list-disc pl-4 my-1">${items}</ul>`
+  })
+  return html
+}
+
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/^#{1,3}\s+/gm, '')
+    .replace(/^[-*]\s+/gm, '')
+    .replace(/\[Source:[^\]]*\]/g, '')
+}
+
+function relativeTime(dateStr: string): string {
+  const now = new Date()
+  const date = new Date(dateStr)
+  const diffMs = now.getTime() - date.getTime()
+  const diffMin = Math.floor(diffMs / 60000)
+  const diffHr = Math.floor(diffMs / 3600000)
+  const diffDay = Math.floor(diffMs / 86400000)
+
+  if (diffMin < 1) return 'Just now'
+  if (diffMin < 60) return `${diffMin} min ago`
+  if (diffHr < 24) return `${diffHr} hour${diffHr > 1 ? 's' : ''} ago`
+  if (diffDay === 1) {
+    return `Yesterday ${date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
+  }
+  if (diffDay < 7) return `${diffDay} days ago`
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' +
+    date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
+
+const SENTENCE_RE = /(?<=[.!?])\s+|(?<=\n)\s*/
+
+function extractSentences(text: string, alreadySent: number): string[] {
+  const cleaned = stripMarkdown(text)
+  const allSentences = cleaned.split(SENTENCE_RE).filter(s => s.trim().length > 5)
+  return allSentences.slice(alreadySent)
+}
+
+class AudioQueue {
+  private queue: Promise<Blob | null>[] = []
+  private playing = false
+  private cancelled = false
+  private currentAudio: HTMLAudioElement | null = null
+  private onStateChange: (playing: boolean) => void
+
+  constructor(onStateChange: (playing: boolean) => void) {
+    this.onStateChange = onStateChange
+  }
+
+  enqueue(text: string) {
+    if (this.cancelled || !text.trim() || text.trim().length < 3) return
+    const blobPromise = fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.trim() }),
+    }).then(res => {
+      if (!res.ok) return null
+      return res.blob()
+    }).catch(() => null)
+
+    this.queue.push(blobPromise)
+    if (!this.playing) this.playNext()
+  }
+
+  private async playNext() {
+    if (this.cancelled || this.queue.length === 0) {
+      this.playing = false
+      this.onStateChange(false)
+      return
+    }
+
+    this.playing = true
+    this.onStateChange(true)
+
+    const blobPromise = this.queue.shift()!
+    const blob = await blobPromise
+    if (this.cancelled || !blob) {
+      if (!this.cancelled) this.playNext()
+      return
+    }
+
+    const url = URL.createObjectURL(blob)
+    const audio = new Audio(url)
+    this.currentAudio = audio
+
+    await new Promise<void>((resolve) => {
+      audio.onended = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
+      audio.onerror = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
+      audio.play().catch(() => resolve())
+    })
+
+    if (!this.cancelled) this.playNext()
+  }
+
+  cancel() {
+    this.cancelled = true
+    this.queue = []
+    if (this.currentAudio) { this.currentAudio.pause(); this.currentAudio = null }
+    this.playing = false
+    this.onStateChange(false)
+  }
+}
+
+interface AIChatProps {
+  fullPage?: boolean
+  onClose?: () => void
+}
+
+export function AIChat({ fullPage = false, onClose }: AIChatProps) {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [isListening, setIsListening] = useState(false)
+  const [hasSpeechRecognition, setHasSpeechRecognition] = useState(false)
+  const [silenceCountdown, setSilenceCountdown] = useState<number | null>(null)
+  const [voiceEnabled, setVoiceEnabled] = useState(true)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [historyLoaded, setHistoryLoaded] = useState(false)
+  const [online, setOnline] = useState(true)
+  const [deviceId] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    let id = localStorage.getItem('gmc_device_id')
+    if (!id) {
+      id = crypto.randomUUID()
+      localStorage.setItem('gmc_device_id', id)
+    }
+    return id
+  })
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const recognitionRef = useRef<any>(null)
+  const voiceEnabledRef = useRef(true)
+  const speechRecognitionRef = useRef<any>(null)
+  const audioQueueRef = useRef<AudioQueue | null>(null)
+  const messageIdsRef = useRef<Set<string>>(new Set())
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const transcriptRef = useRef('')
+
+  // Online/offline detection
+  useEffect(() => {
+    setOnline(navigator.onLine)
+    const on = () => setOnline(true)
+    const off = () => setOnline(false)
+    window.addEventListener('online', on)
+    window.addEventListener('offline', off)
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off) }
+  }, [])
+
+  // Load conversation history from Supabase
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const { data } = await supabase
+          .from('external_agent_conversations')
+          .select('id, role, content, sender_name, created_at')
+          .eq('device_id', deviceId)
+          .order('created_at', { ascending: true })
+
+        if (data && data.length > 0) {
+          const msgs: Message[] = data.map((row: DbMessage) => ({
+            id: row.id,
+            role: row.role,
+            content: row.content,
+            sender_name: row.sender_name,
+            created_at: row.created_at,
+          }))
+          setMessages(msgs)
+          for (const row of data) {
+            messageIdsRef.current.add(row.id)
+          }
+        }
+      } catch {
+        // Offline or table doesn't exist yet — proceed without history
+      }
+      setHistoryLoaded(true)
+    }
+    loadHistory()
+  }, [deviceId])
+
+  // Subscribe to realtime inserts from other clients
+  useEffect(() => {
+    const channel = supabase
+      .channel('external_agent_conversations_realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'external_agent_conversations', filter: `device_id=eq.${deviceId}` },
+        (payload: any) => {
+          const row = payload.new as DbMessage
+          if (messageIdsRef.current.has(row.id)) return
+          messageIdsRef.current.add(row.id)
+          setMessages(prev => [...prev, {
+            id: row.id,
+            role: row.role,
+            content: row.content,
+            sender_name: row.sender_name,
+            created_at: row.created_at,
+          }])
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [deviceId])
+
+  useEffect(() => {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (SR) {
+      speechRecognitionRef.current = SR
+      setHasSpeechRecognition(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    voiceEnabledRef.current = voiceEnabled
+    if (!voiceEnabled && audioQueueRef.current) {
+      audioQueueRef.current.cancel()
+      audioQueueRef.current = null
+    }
+  }, [voiceEnabled])
+
+  const scrollToBottom = useCallback(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, scrollToBottom])
+
+  const playFullMessage = useCallback((text: string) => {
+    if (audioQueueRef.current) audioQueueRef.current.cancel()
+    const queue = new AudioQueue((playing) => setIsSpeaking(playing))
+    audioQueueRef.current = queue
+    const sentences = stripMarkdown(text).split(SENTENCE_RE).filter(s => s.trim().length > 5)
+    for (const sentence of sentences) queue.enqueue(sentence)
+  }, [])
+
+  const saveMessage = useCallback(async (role: 'user' | 'assistant', content: string) => {
+    try {
+      const { data } = await supabase
+        .from('external_agent_conversations')
+        .insert({ role, content, sender_name: 'Visitor', device_id: deviceId })
+        .select('id, created_at')
+        .single()
+
+      if (data) {
+        messageIdsRef.current.add(data.id)
+        return { id: data.id, created_at: data.created_at }
+      }
+    } catch {
+      // Offline — message not persisted
+    }
+    return null
+  }, [])
+
+  const sendMessage = useCallback(async (text: string, isVoice = false) => {
+    if (!text.trim() || isStreaming) return
+
+    const userMessage: Message = { role: 'user', content: text.trim() }
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
+    setInput('')
+    setIsStreaming(true)
+
+    const saved = await saveMessage('user', text.trim())
+    if (saved) {
+      userMessage.id = saved.id
+      userMessage.created_at = saved.created_at
+    }
+
+    if (audioQueueRef.current) {
+      audioQueueRef.current.cancel()
+      audioQueueRef.current = null
+    }
+
+    const assistantMessage: Message = { role: 'assistant', content: '' }
+    setMessages([...updatedMessages, assistantMessage])
+
+    let sentencesSent = 0
+    let audioQueue: AudioQueue | null = null
+    if (voiceEnabledRef.current) {
+      audioQueue = new AudioQueue((playing) => setIsSpeaking(playing))
+      audioQueueRef.current = audioQueue
+    }
+
+    try {
+      const recentHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: recentHistory,
+          question: text.trim(),
+          voice: isVoice,
+        }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: 'Request failed' }))
+        throw new Error(errorData.error || `API error: ${res.status}`)
+      }
+
+      const reader = res.body?.getReader()
+      if (!reader) throw new Error('No response stream')
+
+      const decoder = new TextDecoder()
+      let assistantContent = ''
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6)
+            if (data === '[DONE]') continue
+            try {
+              const parsed = JSON.parse(data)
+              if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+                assistantContent += parsed.delta.text
+                setMessages(prev => {
+                  const updated = [...prev]
+                  updated[updated.length - 1] = { role: 'assistant', content: assistantContent }
+                  return updated
+                })
+
+                if (audioQueue) {
+                  const newSentences = extractSentences(assistantContent, sentencesSent)
+                  const toSend = newSentences.slice(0, -1)
+                  for (const sentence of toSend) {
+                    audioQueue.enqueue(sentence)
+                    sentencesSent++
+                  }
+                }
+              }
+            } catch { /* skip */ }
+          }
+        }
+      }
+
+      if (assistantContent) {
+        const savedAssistant = await saveMessage('assistant', assistantContent)
+        setMessages(prev => {
+          const updated = [...prev]
+          updated[updated.length - 1] = {
+            role: 'assistant',
+            content: assistantContent,
+            id: savedAssistant?.id,
+            created_at: savedAssistant?.created_at,
+          }
+          return updated
+        })
+
+        if (audioQueue) {
+          const remaining = extractSentences(assistantContent, sentencesSent)
+          for (const sentence of remaining) audioQueue.enqueue(sentence)
+        }
+      }
+    } catch (error: any) {
+      setMessages(prev => {
+        const updated = [...prev]
+        updated[updated.length - 1] = {
+          role: 'assistant',
+          content: `Error: ${error.message || 'Something went wrong. Please try again.'}`,
+        }
+        return updated
+      })
+    } finally {
+      setIsStreaming(false)
+      inputRef.current?.focus()
+    }
+  }, [messages, isStreaming, saveMessage])
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    sendMessage(input)
+  }
+
+  const handleChipClick = (question: string) => {
+    sendMessage(question)
+  }
+
+  const clearSilenceTimer = useCallback(() => {
+    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null }
+    if (countdownIntervalRef.current) { clearInterval(countdownIntervalRef.current); countdownIntervalRef.current = null }
+    setSilenceCountdown(null)
+  }, [])
+
+  const startSilenceTimer = useCallback(() => {
+    clearSilenceTimer()
+    let remaining = 3
+    setSilenceCountdown(remaining)
+    countdownIntervalRef.current = setInterval(() => {
+      remaining--
+      if (remaining > 0) {
+        setSilenceCountdown(remaining)
+      }
+    }, 1000)
+    silenceTimerRef.current = setTimeout(() => {
+      clearSilenceTimer()
+      const text = transcriptRef.current.trim()
+      if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
+      setIsListening(false)
+      if (text) {
+        setInput('')
+        sendMessage(text, true)
+      }
+      transcriptRef.current = ''
+    }, 3500)
+  }, [clearSilenceTimer, sendMessage])
+
+  const startListening = useCallback(() => {
+    if (!speechRecognitionRef.current || isStreaming) return
+    const recognition = new speechRecognitionRef.current()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = 'en-US'
+    transcriptRef.current = ''
+
+    recognition.onstart = () => setIsListening(true)
+
+    recognition.onresult = (event: any) => {
+      let finalTranscript = ''
+      let interimTranscript = ''
+      for (let i = 0; i < event.results.length; i++) {
+        const result = event.results[i]
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript
+        } else {
+          interimTranscript += result[0].transcript
+        }
+      }
+      const fullText = (finalTranscript + interimTranscript).trim()
+      transcriptRef.current = fullText
+      setInput(fullText)
+      startSilenceTimer()
+    }
+
+    recognition.onerror = () => {
+      clearSilenceTimer()
+      setIsListening(false)
+      transcriptRef.current = ''
+    }
+
+    recognition.onend = () => {
+      if (transcriptRef.current.trim() && !silenceTimerRef.current) {
+        const text = transcriptRef.current.trim()
+        setIsListening(false)
+        setInput('')
+        sendMessage(text, true)
+        transcriptRef.current = ''
+      }
+    }
+
+    recognitionRef.current = recognition
+    recognition.start()
+  }, [isStreaming, sendMessage, startSilenceTimer, clearSilenceTimer])
+
+  const stopListening = useCallback(() => {
+    clearSilenceTimer()
+    const text = transcriptRef.current.trim()
+    if (recognitionRef.current) { recognitionRef.current.stop(); recognitionRef.current = null }
+    setIsListening(false)
+    if (text) {
+      setInput('')
+      sendMessage(text, true)
+    }
+    transcriptRef.current = ''
+  }, [clearSilenceTimer, sendMessage])
+
+  // Offline state
+  if (!online) {
+    return (
+      <div className={`flex flex-col items-center justify-center gap-4 ${fullPage ? 'h-[calc(100vh-72px)]' : 'h-full'}`}>
+        <div className="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center">
+          <WifiOff className="text-amber-500" size={24} />
+        </div>
+        <p className="text-text-secondary text-center px-4">
+          The AI Assistant requires an internet connection.
+        </p>
+      </div>
+    )
+  }
+
+  // Derive Nugget visual state from existing variables
+  const lastMessage = messages[messages.length - 1]
+  const isThinking = isStreaming && (!lastMessage || lastMessage.role !== 'assistant' || !lastMessage.content)
+  const isTalking = (isStreaming && lastMessage?.role === 'assistant' && !!lastMessage.content) || isSpeaking
+  const nuggetState: NuggetState = isListening ? 'listening' : isThinking ? 'thinking' : isTalking ? 'talking' : 'idle'
+
+  const containerClass = fullPage
+    ? 'flex flex-col h-[calc(100vh-72px)] pt-[72px]'
+    : 'flex flex-col h-full'
+
+  return (
+    <div className={containerClass}>
+      {/* Header */}
+      <div className={`flex items-center gap-3 px-4 py-3 border-b ${fullPage ? 'border-border' : 'border-gray-100'}`}>
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-navy/10">
+          <MessageCircle size={16} className="text-brand-navy" />
+        </div>
+        <div className="flex items-center gap-2 min-w-0">
+          <h2 className="text-sm font-semibold text-text-primary whitespace-nowrap">ASK NUGGET</h2>
+          <Volume2 size={12} className={`flex-shrink-0 ${isSpeaking ? 'text-brand-gold animate-pulse' : 'text-text-muted'}`} />
+          <button
+            onClick={() => setVoiceEnabled(v => !v)}
+            className={`relative inline-flex items-center w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+              voiceEnabled ? 'bg-brand-navy' : 'bg-gray-300'
+            }`}
+          >
+            <span
+              className={`inline-block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                voiceEnabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
+              }`}
+            />
+          </button>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            aria-label="Close"
+          >
+            <X size={14} className="text-text-primary" />
+          </button>
+        )}
+      </div>
+
+      {/* Message Area */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth">
+        {!historyLoaded ? (
+          <div className="flex items-center justify-center h-full">
+            <span className="text-text-muted text-sm">Loading...</span>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full gap-5 px-2">
+            <NuggetStatus state={nuggetState} size={80} />
+            <div className="text-center">
+              <p className="text-text-primary text-base font-medium">ASK NUGGET</p>
+              <p className="text-text-muted text-xs mt-1">GMC AI Supercomputer</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {SUGGESTED_QUESTIONS.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => handleChipClick(q)}
+                  className="px-3 py-1.5 text-xs text-text-secondary bg-gray-50 border border-border rounded-full hover:bg-brand-navy/5 hover:text-brand-navy hover:border-brand-navy/20 transition-colors"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-center py-2 mb-2">
+              <NuggetStatus state={nuggetState} size={60} />
+            </div>
+            {messages.map((msg, i) => (
+            <div key={msg.id || i} className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {msg.role === 'assistant' && (
+                <div className="flex-shrink-0 w-8 h-8 md:w-8 md:h-8 rounded-full overflow-hidden mt-0.5">
+                  <Image src="/images/nugget/nugget-avatar-circle.png" alt="Nugget" width={32} height={32} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div
+                className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-[13px] leading-relaxed relative ${
+                  msg.role === 'user'
+                    ? 'bg-brand-navy text-white rounded-br-sm'
+                    : 'bg-gray-50 border border-gray-100 text-text-primary rounded-bl-sm'
+                }`}
+              >
+                {msg.role === 'assistant' ? (
+                  <>
+                    <div dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }} />
+                    {isStreaming && i === messages.length - 1 && (
+                      <span className="inline-flex gap-1 ml-1 mt-1">
+                        <span className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse" />
+                        <span className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse [animation-delay:150ms]" />
+                        <span className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse [animation-delay:300ms]" />
+                      </span>
+                    )}
+                    {msg.content && !isStreaming && (
+                      <button
+                        onClick={() => playFullMessage(msg.content)}
+                        className="absolute bottom-1 right-1 p-1 rounded transition-colors text-gray-300 hover:text-brand-navy"
+                        title="Play audio"
+                      >
+                        <Volume2 size={11} />
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <span>{msg.content}</span>
+                )}
+                {msg.created_at && (
+                  <div className={`text-[10px] mt-1 ${msg.role === 'user' ? 'text-white/50 text-right' : 'text-text-muted'}`}>
+                    {relativeTime(msg.created_at)}
+                  </div>
+                )}
+              </div>
+              {msg.role === 'user' && (
+                <div className="flex-shrink-0 w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center mt-0.5">
+                  <User size={12} className="text-text-muted" />
+                </div>
+              )}
+            </div>
+          ))}
+          </>
+        )}
+      </div>
+
+      {/* Listening indicator */}
+      {isListening && (
+        <div className="flex items-center justify-center gap-2 py-2 text-xs text-brand-navy">
+          <span className="w-2 h-2 bg-brand-navy rounded-full animate-pulse" />
+          {silenceCountdown !== null
+            ? <span className="text-text-muted">Sending in {silenceCountdown}...</span>
+            : 'Listening...'
+          }
+        </div>
+      )}
+
+      {/* Input Bar */}
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 px-3 py-3 border-t border-gray-100">
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask Nugget..."
+          disabled={isStreaming}
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-brand-navy focus:ring-1 focus:ring-brand-navy/20 transition-colors disabled:opacity-50"
+          autoFocus={fullPage}
+        />
+        {hasSpeechRecognition && (
+          <button
+            type="button"
+            onClick={isListening ? stopListening : startListening}
+            disabled={isStreaming}
+            className={`flex items-center justify-center w-9 h-9 rounded-full border-2 transition-all disabled:opacity-30 disabled:cursor-not-allowed ${
+              isListening
+                ? 'bg-brand-navy border-brand-navy text-white animate-pulse'
+                : 'border-brand-navy/30 text-brand-navy hover:bg-brand-navy/5'
+            }`}
+            title={isListening ? 'Stop listening' : 'Voice input'}
+          >
+            <Mic size={14} />
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={!input.trim() || isStreaming}
+          className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-navy text-white hover:bg-brand-navy/90 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          <Send size={14} />
+        </button>
+      </form>
+    </div>
+  )
+}

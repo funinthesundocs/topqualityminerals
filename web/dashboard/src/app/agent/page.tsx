@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback, FormEvent } from 'react'
-import { Brain, Send, User, Bot, Mic, Volume2 } from 'lucide-react'
+import Image from 'next/image'
+import { Brain, Send, User, Mic, Volume2 } from 'lucide-react'
+import { NuggetStatus, type NuggetState } from '@/components/NuggetStatus'
 import { supabase } from '@/lib/supabase'
 
 const DEAL_ID = '57eb32a1-8550-45d1-8906-64652642c465'
@@ -496,6 +498,12 @@ export default function AgentPage() {
     transcriptRef.current = ''
   }, [clearSilenceTimer, sendMessage])
 
+  // Derive Nugget visual state from existing variables
+  const lastMessage = messages[messages.length - 1]
+  const isThinking = isStreaming && (!lastMessage || lastMessage.role !== 'assistant' || !lastMessage.content)
+  const isTalking = (isStreaming && lastMessage?.role === 'assistant' && !!lastMessage.content) || isSpeaking
+  const nuggetState: NuggetState = isListening ? 'listening' : isThinking ? 'thinking' : isTalking ? 'talking' : 'idle'
+
   return (
     <div className="page-enter flex flex-col h-[calc(100vh-7rem)] -mt-2">
       {/* Header */}
@@ -533,9 +541,7 @@ export default function AgentPage() {
           </div>
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800">
-              <Brain size={32} className="text-[var(--color-primary)] opacity-60" />
-            </div>
+            <NuggetStatus state={nuggetState} size={80} />
             <div className="text-center">
               <p className="text-zinc-300 text-lg font-medium">Ask anything about the GMC x Aboitiz deal</p>
               <p className="text-zinc-600 text-sm mt-1">Powered by RAG retrieval over the intelligence database</p>
@@ -553,11 +559,15 @@ export default function AgentPage() {
             </div>
           </div>
         ) : (
-          messages.map((msg, i) => (
+          <>
+            <div className="flex justify-center py-2 mb-2">
+              <NuggetStatus state={nuggetState} size={60} />
+            </div>
+            {messages.map((msg, i) => (
             <div key={msg.id || i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
-                <div className="flex-shrink-0 w-7 h-7 rounded-md bg-zinc-800 flex items-center justify-center mt-0.5">
-                  <Bot size={14} className="text-[var(--color-primary)]" />
+                <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden mt-0.5">
+                  <Image src="/images/nugget/nugget-avatar-circle.png" alt="Nugget" width={32} height={32} className="w-full h-full object-cover" />
                 </div>
               )}
               <div
@@ -602,7 +612,8 @@ export default function AgentPage() {
                 </div>
               )}
             </div>
-          ))
+          ))}
+          </>
         )}
       </div>
 

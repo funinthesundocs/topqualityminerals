@@ -8,3 +8,6 @@ build/
 .DS_Store
 intelligence/raw/
 production/outputs/
+
+# Local Netlify folder
+.netlify
