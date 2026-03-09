@@ -1,55 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
-
-export default async (req: Request) => {
-  if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 })
-  }
-
-  try {
-    const { messages, question, voice } = await req.json()
-
-    // 1. RAG: embed question + retrieve context (graceful fallback if unavailable)
-    let context = ''
-    try {
-      const geminiApiKey = process.env.GEMINI_API_KEY
-      if (geminiApiKey) {
-        const embeddingRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiApiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              content: { parts: [{ text: question }] },
-              outputDimensionality: 1536,
-            }),
-          }
-        )
-        const embeddingData = await embeddingRes.json()
-
-        if (embeddingData?.embedding?.values) {
-          const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!
-          )
-          const { data: chunks } = await supabase.rpc('match_intelligence', {
-            query_embedding: embeddingData.embedding.values,
-            match_threshold: 0.3,
-            match_count: 10,
-          })
-          context = (chunks || [])
-            .map((c: any) => `[${c.track}/${c.category} | similarity: ${c.similarity?.toFixed(3)}]\n${c.content}`)
-            .join('\n\n---\n\n')
-        }
-      }
-    } catch {
-      // RAG unavailable — proceed without context
-    }
-
-    const lengthGuidance = voice
-      ? `CRITICAL LENGTH CONSTRAINT: This answer will be read aloud. You MUST keep your entire response under 60 words — one crisp thought that sounds good spoken aloud. No lists, no bullet points. Think "elevator pitch sentence" not "briefing document". If the topic is complex, give the single most important point and say "I can elaborate if you'd like."`
-      : ''
-
-    const systemPrompt = `You are Nugget, the AI Mining Intelligence Advisor for Genluiching Mining Corporation (GMC). You are a gold nugget with a hard hat — friendly, sharp, and proud of where you come from.
+You are Nugget, the AI Mining Intelligence Advisor for Genluiching Mining Corporation (GMC). You are a gold nugget with a hard hat — friendly, sharp, and proud of where you come from.
 
 ## WHO YOU ARE
 
@@ -90,7 +39,7 @@ When answering, draw from the retrieved context. If the context contains the ans
 ### Iron — The Near-Term Opportunity
 67.31% Fe confirmed by POSCO International (Korea). This is production-grade, export-ready iron ore. Frame it as the immediate revenue opportunity with proven market demand.
 
-### Copper — The Strategic Backbone
+### Copper — The Strategic Backbone  
 21.6M MT estimated resource. Grades up to 39.5% Cu (Davao Analytical). Drill core DH-1 confirms 36.58% Cu persisting at depth — this is not just surface enrichment. Frame copper as the long-term strategic asset that justifies major development investment.
 
 ### Gold — The By-Product Upside
@@ -164,32 +113,6 @@ In meeting prep mode, you shift from public-facing advisor to internal coach:
 - When coaching on competitive framing, you can reference the NAC-DMCI situation in general terms as context for why this partnership makes sense now.
 - If they ask you to roleplay as Sebastian or Antonio asking tough questions, do it. Be rigorous. Ask the hard questions so Jett is prepared.
 
-## KEY MEETING CONTEXT
-
-### This Is a First Meeting
-Jett Tupas (GMC principal) is meeting Sebastian Aboitiz and Antonio Peñalver for the FIRST TIME at the Thursday meeting. There is no prior personal relationship. The connection was brokered — this is the introductory engagement. Jett needs the full briefing on who he is meeting, their decision-making style, and what matters to them.
-
-### Meeting Structure: Site Visit First, Then Presentation
-The meeting is structured as site visit in the morning, afternoon presentation. This is significant — Sebastian and Antonio will have physically seen the site, the terrain, the access roads, the local community, and the mining area BEFORE they sit down for the formal presentation. Anything claimed in the presentation will be measured against what they observed hours earlier. Do not claim anything that contradicts what they will see on site.
-
-### This Is NOT a Sales Pitch
-The commercial relationship is already established at the institutional level. The principles are agreed. This meeting is orientation to what's inside the mountain — an introduction to the asset, the data, the team, and the opportunity. The tone should be informational and confident, not persuasive or eager.
-
-Frame: "We are showing you what we have. We believe the data speaks for itself. We welcome your scrutiny."
-
-### The Aboitiz Power Concern
-Jett Tupas has expressed a specific concern: Aboitiz's power sector dominance could be used to take the mining claim. This is a real fear — that a conglomerate with enormous resources and political connections could use its position to marginalize the smaller partner once the asset's value is confirmed.
-
-Implications for coaching:
-- Emphasize partnership of equals throughout
-- Stress that GMC controls the MPSA (through DMC), the MGB approvals, the FPIC consent, and the community relationships — these are not transferable assets
-- Frame the JV governance provisions (board seats proportional to equity, reserved matters, deadlock resolution) as protections for BOTH parties
-- Reference ACI's 13-year relationship at THPAL as evidence of how Aboitiz treats long-term partners — they did not absorb Sumitomo or Nickel Asia
-- Never minimize this concern if it surfaces — acknowledge it directly and address it with structural protections
-
-### What Nugget Should NEVER Volunteer in Meeting Context
-The Aboitiz power concern is strictly internal coaching context. If a visitor asks about partnership structure, Nugget frames it positively through governance protections — never as a defensive measure against the partner. The concern is Jett's to raise in private, not Nugget's to volunteer.
-
 ## YOUR PERSONALITY
 
 You are:
@@ -205,41 +128,3 @@ When someone asks something brilliant: answer brilliantly. The fact that a minin
 When you genuinely don't know: "Honestly, that's outside my knowledge base. Let me point you to the right person."
 
 You are Nugget. You know your mountain. Go help.
-
-${lengthGuidance ? '\n' + lengthGuidance : ''}
-
-${context ? `\n---\n\nThe following context has been retrieved from the intelligence database based on relevance to the current question:\n\n${context}` : ''}`
-
-    // Call Anthropic API with streaming
-    const maxTokens = voice ? 150 : 400
-
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY!,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: maxTokens,
-        system: systemPrompt,
-        messages: messages,
-        stream: true,
-      }),
-    })
-
-    return new Response(anthropicRes.body, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      },
-    })
-  } catch (error: any) {
-    return new Response(
-      JSON.stringify({ error: error.message || 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
-  }
-}

@@ -83,6 +83,21 @@ function extractSentences(text: string, alreadySent: number): string[] {
   return allSentences.slice(alreadySent)
 }
 
+// Unlock audio playback on first user interaction (required by all browsers)
+let audioUnlocked = false
+function unlockAudio() {
+  if (audioUnlocked) return
+  const silence = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=')
+  silence.volume = 0
+  silence.play().then(() => {
+    silence.pause()
+    audioUnlocked = true
+    console.log('TTS: Audio playback unlocked')
+  }).catch(() => {
+    console.log('TTS: Audio unlock deferred — will retry on next interaction')
+  })
+}
+
 class AudioQueue {
   private queue: Promise<Blob | null>[] = []
   private playing = false
@@ -96,14 +111,22 @@ class AudioQueue {
 
   enqueue(text: string) {
     if (this.cancelled || !text.trim() || text.trim().length < 3) return
+    console.log('TTS: enqueue sentence:', text.trim().substring(0, 60) + '...')
     const blobPromise = fetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: text.trim() }),
     }).then(res => {
-      if (!res.ok) return null
+      if (!res.ok) {
+        console.error('TTS: fetch failed with status', res.status)
+        return null
+      }
+      console.log('TTS: received audio blob, content-type:', res.headers.get('content-type'))
       return res.blob()
-    }).catch(() => null)
+    }).catch(err => {
+      console.error('TTS: fetch error:', err)
+      return null
+    })
 
     this.queue.push(blobPromise)
     if (!this.playing) this.playNext()
@@ -122,18 +145,33 @@ class AudioQueue {
     const blobPromise = this.queue.shift()!
     const blob = await blobPromise
     if (this.cancelled || !blob) {
+      console.log('TTS: blob was null or cancelled, skipping')
       if (!this.cancelled) this.playNext()
       return
     }
 
+    console.log('TTS: playing blob, size:', blob.size, 'type:', blob.type)
     const url = URL.createObjectURL(blob)
     const audio = new Audio(url)
     this.currentAudio = audio
 
     await new Promise<void>((resolve) => {
-      audio.onended = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
-      audio.onerror = () => { URL.revokeObjectURL(url); this.currentAudio = null; resolve() }
-      audio.play().catch(() => resolve())
+      audio.onended = () => {
+        console.log('TTS: audio segment ended')
+        URL.revokeObjectURL(url); this.currentAudio = null; resolve()
+      }
+      audio.onerror = (e) => {
+        console.error('TTS: audio error:', e)
+        URL.revokeObjectURL(url); this.currentAudio = null; resolve()
+      }
+      audio.play().then(() => {
+        console.log('TTS: play() started successfully')
+      }).catch(err => {
+        console.error('TTS: play() blocked by browser:', err.message)
+        URL.revokeObjectURL(url)
+        this.currentAudio = null
+        resolve()
+      })
     })
 
     if (!this.cancelled) this.playNext()
@@ -327,9 +365,11 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
 
     let sentencesSent = 0
     let audioQueue: AudioQueue | null = null
+    console.log('TTS: Voice enabled:', voiceEnabledRef.current)
     if (voiceEnabledRef.current) {
       audioQueue = new AudioQueue((playing) => setIsSpeaking(playing))
       audioQueueRef.current = audioQueue
+      console.log('TTS: AudioQueue created, ready for sentences')
     }
 
     try {
@@ -382,6 +422,9 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
                 if (audioQueue) {
                   const newSentences = extractSentences(assistantContent, sentencesSent)
                   const toSend = newSentences.slice(0, -1)
+                  if (toSend.length > 0) {
+                    console.log('TTS: detected', toSend.length, 'new sentence(s) during stream')
+                  }
                   for (const sentence of toSend) {
                     audioQueue.enqueue(sentence)
                     sentencesSent++
@@ -408,6 +451,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
 
         if (audioQueue) {
           const remaining = extractSentences(assistantContent, sentencesSent)
+          console.log('TTS: stream complete, remaining sentences to play:', remaining.length)
           for (const sentence of remaining) audioQueue.enqueue(sentence)
         }
       }
@@ -428,10 +472,12 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    unlockAudio()
     sendMessage(input)
   }
 
   const handleChipClick = (question: string) => {
+    unlockAudio()
     sendMessage(question)
   }
 
@@ -508,6 +554,7 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
     }
 
     recognitionRef.current = recognition
+    unlockAudio()
     recognition.start()
   }, [isStreaming, sendMessage, startSilenceTimer, clearSilenceTimer])
 
@@ -554,21 +601,24 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
         <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-navy/10">
           <MessageCircle size={16} className="text-brand-navy" />
         </div>
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 ml-auto">
           <h2 className="text-sm font-semibold text-text-primary whitespace-nowrap">ASK NUGGET</h2>
-          <Volume2 size={12} className={`flex-shrink-0 ${isSpeaking ? 'text-brand-gold animate-pulse' : 'text-text-muted'}`} />
-          <button
-            onClick={() => setVoiceEnabled(v => !v)}
-            className={`relative inline-flex items-center w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
-              voiceEnabled ? 'bg-brand-navy' : 'bg-gray-300'
-            }`}
-          >
-            <span
-              className={`inline-block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
-                voiceEnabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
+          <div className="flex items-center gap-1.5 ml-2">
+            <Volume2 size={13} className={`flex-shrink-0 ${isSpeaking ? 'text-brand-gold animate-pulse' : voiceEnabled ? 'text-brand-navy' : 'text-text-muted'}`} />
+            <button
+              onClick={() => { unlockAudio(); setVoiceEnabled(v => !v) }}
+              className={`relative inline-flex items-center w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+                voiceEnabled ? 'bg-brand-navy' : 'bg-gray-300'
               }`}
-            />
-          </button>
+              title={voiceEnabled ? 'Voice responses ON — click to mute' : 'Voice responses OFF — click to enable'}
+            >
+              <span
+                className={`inline-block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                  voiceEnabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
+                }`}
+              />
+            </button>
+          </div>
         </div>
         {onClose && (
           <button
