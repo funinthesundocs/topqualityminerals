@@ -201,6 +201,10 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
   const [online, setOnline] = useState(true)
+  const [researchPending, setResearchPending] = useState(false)
+  const [researchLoading, setResearchLoading] = useState(false)
+  const researchAbortRef = useRef(false)
+  const isAutoFollowUp = useRef(false)
   const [deviceId] = useState(() => {
     if (typeof window === 'undefined') return ''
     let id = localStorage.getItem('gmc_device_id')
@@ -353,6 +357,10 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const sendMessage = useCallback(async (text: string, isVoice = false) => {
     if (!text.trim() || isStreaming) return
 
+    researchAbortRef.current = true
+    setResearchPending(false)
+    setResearchLoading(false)
+
     const userMessage: Message = { role: 'user', content: text.trim() }
     const updatedMessages = [...messages, userMessage]
     setMessages(updatedMessages)
@@ -421,6 +429,125 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
             if (data === '[DONE]') continue
             try {
               const parsed = JSON.parse(data)
+              if (parsed.type === 'research_pending' && !isAutoFollowUp.current) {
+                const pendingQuestion = parsed.question;
+                const currentMessages = messages.slice(-6);
+                setResearchPending(true);
+                researchAbortRef.current = false;
+
+                const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+                const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+                if (supabaseUrl && anonKey) {
+                  (async () => {
+                    for (let i = 0; i < 10; i++) {
+                      await new Promise(r => setTimeout(r, 5000));
+                      if (researchAbortRef.current) break;
+
+                      try {
+                        const res = await fetch(
+                          `${supabaseUrl}/rest/v1/agent_tasks?task_type=eq.knowledge_gap&status=eq.complete&order=created_at.desc&limit=5`,
+                          { headers: { 'apikey': anonKey, 'Authorization': `Bearer ${anonKey}` } }
+                        );
+                        const tasks = await res.json();
+                        const recentCutoff = new Date(Date.now() - 60000).toISOString();
+                        const match = tasks.find((t: any) =>
+                          t.payload?.question?.toLowerCase().trim() === pendingQuestion.toLowerCase().trim() &&
+                          t.created_at > recentCutoff &&
+                          t.result?.success === true
+                        );
+
+                        if (match) {
+                          setResearchPending(false);
+                          if (researchAbortRef.current) return;
+
+                          setResearchLoading(true);
+                          isAutoFollowUp.current = true;
+
+                          try {
+                            const followUpRes = await fetch('/api/chat', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                messages: [{ role: 'user', content: pendingQuestion }],
+                                question: pendingQuestion,
+                                voice: false,
+                                isFollowUp: true
+                              })
+                            });
+
+                            let followUpContent = '';
+                            const freader = followUpRes.body?.getReader();
+                            const fdecoder = new TextDecoder();
+                            if (freader) {
+                              let fbuffer = '';
+                              while (true) {
+                                const { done, value } = await freader.read();
+                                if (done) break;
+                                fbuffer += fdecoder.decode(value, { stream: true });
+                                const flines = fbuffer.split('\n');
+                                fbuffer = flines.pop() || '';
+                                for (const fline of flines) {
+                                  if (fline.startsWith('data: ') || fline.startsWith('data:')) {
+                                    try {
+                                      const fp = JSON.parse(fline.slice(fline.indexOf(':') + 1).trim());
+                                      if (fp.type === 'content_block_delta' && fp.delta?.text) {
+                                        followUpContent += fp.delta.text;
+                                      }
+                                    } catch {}
+                                  }
+                                }
+                              }
+                            }
+
+                            if (followUpContent.length > 0) {
+                              const updatedMsg: Message = {
+                                role: 'assistant',
+                                content: followUpContent,
+                                sender_name: 'Nugget (Updated)',
+                                created_at: new Date().toISOString()
+                              };
+                              setMessages(prev => [...prev, updatedMsg]);
+
+                              // TTS for follow-up if voice is enabled
+                              if (voiceEnabledRef.current && audioQueueRef.current) {
+                                const sentences = extractSentences(followUpContent, 0);
+                                for (const sentence of sentences) {
+                                  audioQueueRef.current.enqueue(sentence);
+                                }
+                              }
+
+                              try {
+                                if (supabaseUrl && anonKey) {
+                                  await fetch(`${supabaseUrl}/rest/v1/external_agent_conversations`, {
+                                    method: 'POST',
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'apikey': anonKey,
+                                      'Authorization': `Bearer ${anonKey}`,
+                                      'Prefer': 'return=minimal'
+                                    },
+                                    body: JSON.stringify({
+                                      deal_id: '57eb32a1-8550-45d1-8906-64652642c465',
+                                      role: 'assistant',
+                                      content: followUpContent,
+                                      sender_name: 'Nugget (Updated)'
+                                    })
+                                  });
+                                }
+                              } catch {}
+                            }
+                          } catch {}
+                          setResearchLoading(false);
+                          isAutoFollowUp.current = false;
+                          return;
+                        }
+                      } catch {}
+                    }
+                    setResearchPending(false);
+                  })();
+                }
+              }
               if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
                 assistantContent += parsed.delta.text
                 setMessages(prev => {
@@ -704,6 +831,14 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
           </>
         )}
       </div>
+
+      {/* Research indicator */}
+      {(researchPending || researchLoading) && (
+        <div className="flex items-center gap-2 px-4 py-2 text-xs italic animate-pulse" style={{ color: '#C5922E' }}>
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#C5922E' }} />
+          {researchLoading ? 'Loading updated answer...' : 'Researching live data...'}
+        </div>
+      )}
 
       {/* Listening indicator */}
       {isListening && (

@@ -5,6 +5,8 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  // Exclude dev-only API routes from static export build
+  excludeDefaultMomentLocales: true,
 }
 
 export default nextConfig
