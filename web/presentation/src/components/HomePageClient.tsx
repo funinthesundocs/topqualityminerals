@@ -81,14 +81,14 @@ const mineralImages = [
 ]
 
 const evidenceItems = [
-  '9 Independent Laboratories',
-  '8 Core Samples — 493m',
-  'FPIC Approved',
-  'MGB Director ORDER',
-  '21.6M MT Copper Ore',
-  'SGECS Report Filed',
-  'POSCO Up to 67.31% Fe',
-  '5 Countries Validated',
+  { label: '9 Independent Laboratories', stat: '9 Labs', detail: 'Across 5 countries', image: '/images/enhanced/negros-07-geology-fieldwork.png' },
+  { label: '8 Core Samples — 493m', stat: '493m', detail: 'Total core drilled', image: '/images/enhanced/negros-08-silica-survey.png' },
+  { label: 'FPIC Approved', stat: 'Approved', detail: 'Free Prior Informed Consent', image: '/images/enhanced/mati-06-team-mountains.png' },
+  { label: 'MGB Director ORDER', stat: 'ORDER', detail: 'MGB Region XI directive', image: '/images/enhanced/mati-05-leadership.png' },
+  { label: '21.6M MT Copper Ore', stat: '21.6M MT', detail: 'Resource estimate from 9% explored', image: '/images/enhanced/mati-07-copper-beauty.png' },
+  { label: 'SGECS Report Filed', stat: 'Filed', detail: 'Geological assessment complete', image: '/images/enhanced/negros-03-summit-vista.png' },
+  { label: 'POSCO Up to 67.31% Fe', stat: '67.31%', detail: 'Peak iron grade confirmed', image: '/images/enhanced/negros-05-active-loading.png' },
+  { label: '5 Countries Validated', stat: '5 Nations', detail: 'Independent global validation', image: '/images/enhanced/mati-03-team-hero.png' },
 ]
 
 interface HomePageClientProps {
@@ -268,16 +268,17 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
             loop
             speed={800}
             breakpoints={{
-              640: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-              1280: { slidesPerView: 5 },
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
             }}
             className="evidence-swiper"
           >
             {evidenceItems.map((item, i) => (
               <SwiperSlide key={i}>
-                <div className="bg-white rounded-xl px-5 py-6 text-center shadow-sm border border-border hover:border-brand-gold/30 transition-colors duration-300">
-                  <span className="font-semibold text-sm text-brand-navy">{item}</span>
+                <div className="group bg-gradient-to-b from-white to-brand-gold/20 rounded-2xl px-5 py-8 h-32 flex flex-col items-center justify-center text-center border-2 border-gray-300 shadow-md hover:border-brand-gold hover:from-brand-gold/15 hover:to-brand-gold/35 hover:shadow-[0_0_25px_rgba(197,146,46,0.25)] transition-all duration-500 cursor-pointer hover:-translate-y-1">
+                  <span className="block font-bold text-3xl text-brand-navy group-hover:text-brand-gold group-hover:drop-shadow-[0_0_10px_rgba(197,146,46,0.4)] transition-all duration-500">{item.stat}</span>
+                  <span className="block text-sm text-text-secondary mt-3 font-semibold tracking-wide group-hover:text-brand-navy transition-colors duration-300">{item.detail}</span>
                 </div>
               </SwiperSlide>
             ))}
@@ -288,12 +289,12 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       {/* VISION BANNER                                                 */}
       {/* ============================================================ */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[57.5vh] min-h-[460px] flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/generated/hero-landscape-enhanced.webp"
-          alt="Davao Oriental"
+          src="/images/enhanced/mati-08-geologists-field.png"
+          alt="GMC geologists reviewing maps in the field"
           fill
-          className="object-cover"
+          className="object-cover object-[center_35%]"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/40" />
