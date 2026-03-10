@@ -12,9 +12,9 @@ interface NuggetStatusProps {
 
 const IMAGE_MAP: Record<NuggetState, string> = {
   idle: '/images/nugget/nugget-greeting.png',
-  listening: '/images/nugget/nugget-avatar-circle.png',
+  listening: '/images/nugget/nugget-hero-light.png',
   thinking: '/images/nugget/nugget-thinking.png',
-  talking: '/images/nugget/nugget-avatar-circle.png',
+  talking: '/images/nugget/nugget-hero-light.png',
 }
 
 const LABEL_MAP: Record<NuggetState, string> = {
@@ -36,7 +36,8 @@ export function NuggetStatus({ state, size = 80 }: NuggetStatusProps) {
   useEffect(() => {
     const preload = [
       '/images/nugget/nugget-greeting.png',
-      '/images/nugget/nugget-avatar-circle.png',
+      '/images/nugget/nugget-hero-light.png',
+      '/images/nugget/nugget-hero-dark.png',
       '/images/nugget/nugget-thinking.png',
     ]
     preload.forEach(src => {

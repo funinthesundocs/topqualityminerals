@@ -218,6 +218,20 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   const audioQueueRef = useRef<AudioQueue | null>(null)
   const messageIdsRef = useRef<Set<string>>(new Set())
 
+  // Preload all nugget images on mount
+  useEffect(() => {
+    const preload = [
+      '/images/nugget/nugget-greeting.png',
+      '/images/nugget/nugget-hero-light.png',
+      '/images/nugget/nugget-hero-dark.png',
+      '/images/nugget/nugget-thinking.png',
+    ]
+    preload.forEach(src => {
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [])
+
   // Online/offline detection
   useEffect(() => {
     setOnline(navigator.onLine)
@@ -557,28 +571,29 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
   return (
     <div className={containerClass}>
       {/* Header */}
-      <div className={`flex items-center gap-3 px-4 py-3 border-b ${fullPage ? 'border-border' : 'border-gray-100'}`}>
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-navy/10">
-          <MessageCircle size={16} className="text-brand-navy" />
+      <div className={`flex items-center gap-4 px-4 py-6 border-b ${fullPage ? 'border-border' : 'border-gray-100'}`}>
+        <div className="flex-shrink-0 w-[134px] h-[134px] rounded-full overflow-hidden shadow-lg flex items-center justify-center">
+          <Image src="/images/nugget/nugget-hero-light.png" alt="Nugget" width={112} height={112} className="w-[112px] h-[112px] object-cover flex-shrink-0" />
         </div>
-        <div className="flex items-center gap-2 min-w-0 ml-auto">
-          <h2 className="text-sm font-semibold text-text-primary whitespace-nowrap">ASK NUGGET</h2>
-          <div className="flex items-center gap-1.5 ml-2">
-            <Volume2 size={13} className={`flex-shrink-0 ${isSpeaking ? 'text-brand-gold animate-pulse' : voiceEnabled ? 'text-brand-navy' : 'text-text-muted'}`} />
-            <button
-              onClick={() => { unlockAudio(); setVoiceEnabled(v => !v) }}
-              className={`relative inline-flex items-center w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
-                voiceEnabled ? 'bg-brand-navy' : 'bg-gray-300'
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <h2 className="text-base font-bold text-text-primary tracking-wide whitespace-nowrap">ASK NUGGET</h2>
+          <p className="text-[11px] text-text-muted whitespace-nowrap">GMC AI Mining Intelligence</p>
+        </div>
+        <div className="flex items-center gap-1.5 ml-auto">
+          <Volume2 size={13} className={`flex-shrink-0 ${isSpeaking ? 'text-brand-gold animate-pulse' : voiceEnabled ? 'text-brand-navy' : 'text-text-muted'}`} />
+          <button
+            onClick={() => { unlockAudio(); setVoiceEnabled(v => !v) }}
+            className={`relative inline-flex items-center w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+              voiceEnabled ? 'bg-brand-navy' : 'bg-gray-300'
+            }`}
+            title={voiceEnabled ? 'Voice responses ON — click to mute' : 'Voice responses OFF — click to enable'}
+          >
+            <span
+              className={`inline-block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                voiceEnabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
               }`}
-              title={voiceEnabled ? 'Voice responses ON — click to mute' : 'Voice responses OFF — click to enable'}
-            >
-              <span
-                className={`inline-block w-3.5 h-3.5 rounded-full bg-white transition-transform ${
-                  voiceEnabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
-                }`}
-              />
-            </button>
-          </div>
+            />
+          </button>
         </div>
         {onClose && (
           <button
@@ -621,13 +636,26 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
             <div className="flex justify-center py-2 mb-2">
               <NuggetStatus state={nuggetState} size={60} />
             </div>
-            {messages.map((msg, i) => (
+            {messages.map((msg, i) => {
+              const isThinkingMsg = msg.role === 'assistant' && isStreaming && i === messages.length - 1 && !msg.content
+              return (
             <div key={msg.id || i} className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
-                <div className="flex-shrink-0 w-8 h-8 md:w-8 md:h-8 rounded-full overflow-hidden mt-0.5">
-                  <Image src="/images/nugget/nugget-avatar-circle.png" alt="Nugget" width={32} height={32} className="w-full h-full object-cover" />
+                <div className={`flex-shrink-0 w-9 h-9 rounded-full overflow-hidden mt-0.5 ${isThinkingMsg ? 'nugget-thinking' : ''}`}>
+                  <Image
+                    src={isThinkingMsg ? '/images/nugget/nugget-thinking.png' : '/images/nugget/nugget-hero-light.png'}
+                    alt="Nugget"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
+              {isThinkingMsg ? (
+                <div className="max-w-[85%] rounded-xl px-3.5 py-2.5 text-[13px] leading-relaxed bg-gray-50 border border-gray-100 text-text-muted rounded-bl-sm">
+                  Thinking...
+                </div>
+              ) : (
               <div
                 className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-[13px] leading-relaxed relative ${
                   msg.role === 'user'
@@ -664,13 +692,15 @@ export function AIChat({ fullPage = false, onClose }: AIChatProps) {
                   </div>
                 )}
               </div>
+              )}
               {msg.role === 'user' && (
                 <div className="flex-shrink-0 w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center mt-0.5">
                   <User size={12} className="text-text-muted" />
                 </div>
               )}
             </div>
-          ))}
+              )
+          })}
           </>
         )}
       </div>

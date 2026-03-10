@@ -167,6 +167,21 @@ export default function AgentPage() {
   const speechRecognitionRef = useRef<any>(null)
   const audioQueueRef = useRef<AudioQueue | null>(null)
   const messageIdsRef = useRef<Set<string>>(new Set())
+
+  // Preload all nugget images on mount
+  useEffect(() => {
+    const preload = [
+      '/images/nugget/nugget-greeting.png',
+      '/images/nugget/nugget-hero-light.png',
+      '/images/nugget/nugget-hero-dark.png',
+      '/images/nugget/nugget-thinking.png',
+    ]
+    preload.forEach(src => {
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [])
+
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const transcriptRef = useRef('')
@@ -563,13 +578,26 @@ export default function AgentPage() {
             <div className="flex justify-center py-2 mb-2">
               <NuggetStatus state={nuggetState} size={60} />
             </div>
-            {messages.map((msg, i) => (
+            {messages.map((msg, i) => {
+              const isThinkingMsg = msg.role === 'assistant' && isStreaming && i === messages.length - 1 && !msg.content
+              return (
             <div key={msg.id || i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {msg.role === 'assistant' && (
-                <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden mt-0.5">
-                  <Image src="/images/nugget/nugget-avatar-circle.png" alt="Nugget" width={32} height={32} className="w-full h-full object-cover" />
+                <div className={`flex-shrink-0 w-9 h-9 rounded-full overflow-hidden mt-0.5 ${isThinkingMsg ? 'nugget-thinking' : ''}`}>
+                  <Image
+                    src={isThinkingMsg ? '/images/nugget/nugget-thinking.png' : '/images/nugget/nugget-hero-dark.png'}
+                    alt="Nugget"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
+              {isThinkingMsg ? (
+                <div className="max-w-[75%] rounded-lg px-4 py-3 text-sm leading-relaxed bg-zinc-900 border-l-2 border-[var(--color-primary)] text-zinc-400">
+                  Thinking...
+                </div>
+              ) : (
               <div
                 className={`max-w-[75%] rounded-lg px-4 py-3 text-sm leading-relaxed relative ${
                   msg.role === 'user'
@@ -606,13 +634,15 @@ export default function AgentPage() {
                   </div>
                 )}
               </div>
+              )}
               {msg.role === 'user' && (
                 <div className="flex-shrink-0 w-7 h-7 rounded-md bg-zinc-800 flex items-center justify-center mt-0.5">
                   <User size={14} className="text-zinc-400" />
                 </div>
               )}
             </div>
-          ))}
+              )
+          })}
           </>
         )}
       </div>

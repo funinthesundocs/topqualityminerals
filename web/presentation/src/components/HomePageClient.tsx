@@ -106,7 +106,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       <section className="relative">
         <Swiper
           modules={[Autoplay, Pagination, EffectFade]}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           effect="fade"
           loop
