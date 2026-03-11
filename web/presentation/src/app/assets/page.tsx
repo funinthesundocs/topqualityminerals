@@ -16,7 +16,7 @@ const mineralCards = [
   },
   {
     src: '/images/generated/copper-hero-data.webp',
-    alt: 'Copper — 39.5% Cu, Near-Concentrate Grade',
+    alt: 'Copper — 36.58% Cu, Ostrea Dec 2024',
     detail: 'Near-concentrate grade at surface — indicating strong supergene enrichment above the primary sulfide system. Four independent laboratories across a decade confirm this as a systematic feature.',
   },
   {

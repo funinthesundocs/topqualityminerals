@@ -70,13 +70,13 @@ const metrics = [
   { value: '9 Labs', label: 'Independent Validation' },
   { value: 'EM Verified', label: 'Poly-Mineralization' },
   { value: '67.31% Fe', label: 'Peak Iron Grade' },
-  { value: '39.5% Cu', label: 'Peak Copper Grade' },
+  { value: '36.58% Cu', label: 'Peak Copper Grade' },
   { value: '21.6M MT', label: 'Resource Estimate' },
 ]
 
 const mineralImages = [
   { src: '/images/generated/iron-hero-data.webp', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
-  { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
+  { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 36.58% Cu, Ostrea Dec 2024' },
   { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 13.77 g/t Au (Dec 2024), Drill Hole DH-10' },
 ]
 
@@ -191,7 +191,8 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
             {mineralImages.map((img) => (
               <Link
                 key={img.src}
-                href="/assets"
+                href="/documents/Recent Ostrea Assay.pdf"
+                target="_blank"
                 className="group block relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1"
               >
                 <div className="relative aspect-video">

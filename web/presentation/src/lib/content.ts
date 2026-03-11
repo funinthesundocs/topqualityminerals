@@ -30,8 +30,8 @@ export const minerals = [
     {
         name: 'Copper',
         symbol: 'Cu',
-        grade: '39.5%',
-        gradeNumber: 39.5,
+        grade: '36.58%',
+        gradeNumber: 36.58,
         image: '/images/generated/copper-hero-data.webp',
         lab: 'NEAR-CONCENTRATE',
         detail: 'Near-concentrate grade at surface — indicating strong supergene enrichment above the primary sulfide system. Four independent laboratories across a decade confirm this as a systematic feature.',
