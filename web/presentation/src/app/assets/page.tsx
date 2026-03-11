@@ -21,8 +21,8 @@ const mineralCards = [
   },
   {
     src: '/images/generated/gold-hero-data.webp',
-    alt: 'Gold — 20.35 g/t Au, Highest Fire Assay',
-    detail: 'Highest gold result ever recorded from this concession. Seven-year grade consistency (2017–2024) from the same laboratory confirms this is a systematic feature, not an anomaly.',
+    alt: 'Gold — 13.77 g/t Au (Dec 2024), Drill Hole DH-10',
+    detail: 'Latest Ostrea fire assay (December 2024, Batch B-34805, Drill Hole DH-10). Historical high of 20.35 g/t Au (October 2017). Gold distribution follows the porphyry model — concentrated in specific zones.',
   },
 ]
 

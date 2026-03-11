@@ -77,7 +77,7 @@ const metrics = [
 const mineralImages = [
   { src: '/images/generated/iron-hero-data.webp', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
   { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
-  { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
+  { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 13.77 g/t Au (Dec 2024), Drill Hole DH-10' },
 ]
 
 const evidenceItems = [

@@ -40,11 +40,11 @@ export const minerals = [
     {
         name: 'Gold',
         symbol: 'Au',
-        grade: '20.35 g/t',
-        gradeNumber: 20.35,
+        grade: '13.77 g/t',
+        gradeNumber: 13.77,
         image: '/images/generated/gold-hero-data.webp',
-        lab: 'HIGHEST FIRE ASSAY',
-        detail: 'Highest gold result ever recorded from this concession. Seven-year grade consistency (2017–2024) from the same laboratory confirms this is a systematic feature, not an anomaly.',
+        lab: 'OSTREA — DEC 2024',
+        detail: 'Latest Ostrea fire assay (December 2024, Batch B-34805, Drill Hole DH-10). Historical high of 20.35 g/t Au (October 2017). Gold distribution follows the porphyry model — concentrated in specific zones.',
         color: '#C5922E',
     },
 ] as const
@@ -211,7 +211,7 @@ export const homepageContent = {
     },
     overview: {
         title: 'Genluiching Mining Corporation',
-        body: 'A 5,906-hectare mining concession in Davao Oriental hosts a polymetallic deposit validated by nine independent laboratories across five countries and three geophysical methods — all converging on the same deposit model. POSCO International confirmed production-grade iron ore at 67.31% Fe. Nine laboratories confirmed near-concentrate copper at 39.5% Cu and gold up to 20.35 g/t Au. The Mineral Production Sharing Agreement is secured and active. The regulatory window is the most favorable in fifteen years.',
+        body: 'A 5,906-hectare mining concession in Davao Oriental hosts a polymetallic deposit validated by nine independent laboratories across five countries and three geophysical methods — all converging on the same deposit model. POSCO International confirmed production-grade iron ore at 67.31% Fe. Nine laboratories confirmed near-concentrate copper at 39.5% Cu and gold up to 13.77 g/t Au (December 2024; historical high 20.35 g/t, October 2017). The Mineral Production Sharing Agreement is secured and active. The regulatory window is the most favorable in fifteen years.',
         image: '/images/site-photos/aerial-concession-view.webp',
     },
     partnership: {

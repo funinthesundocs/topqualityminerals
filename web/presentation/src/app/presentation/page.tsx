@@ -11,8 +11,8 @@ import { CheckCircle, AlertTriangle, ArrowRight, ChevronDown, Handshake, Users, 
 /* ------------------------------------------------------------------ */
 
 const sections = [
-  'Opening', 'The Opportunity', 'The Alignment', 'The Proof',
-  'The Plan', 'The Protection', 'The Vision', 'The Ask',
+  'Opening', 'The Opportunity', 'The Deposit', 'The Validation',
+  'The Alignment', 'The Plan', 'The Protection', 'The Vision', 'The Ask',
 ]
 
 function CountUp({ target, suffix = '' }: { target: string; suffix?: string }) {
@@ -208,7 +208,7 @@ export default function PresentationPage() {
               {[
                 { src: '/images/generated/iron-hero-data.webp', alt: 'Iron Ore — 67.31% Fe, POSCO Confirmed' },
                 { src: '/images/generated/copper-hero-data.webp', alt: 'Copper — 39.5% Cu, Near-Concentrate Grade' },
-                { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 20.35 g/t Au, Highest Fire Assay' },
+                { src: '/images/generated/gold-hero-data.webp', alt: 'Gold — 13.77 g/t Au (Dec 2024), Drill Hole DH-10' },
               ].map((img, i) => (
                 <div
                   key={img.src}
@@ -237,10 +237,67 @@ export default function PresentationPage() {
         </section>
 
         {/* ============================================================ */}
-        {/* SECTION 3 — THE ALIGNMENT                                    */}
-        {/* partnership-ecosystem.png IS the slide                        */}
+        {/* SECTION 3 — THE DEPOSIT                                      */}
+        {/* cross-section-infographic — geological structure               */}
         {/* ============================================================ */}
         <section data-section="2" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-4">
+              The Deposit
+            </h2>
+            <p className="text-white/40 text-lg text-center mb-10 max-w-2xl mx-auto">
+              Eight core samples to 493 meters total depth across the concession
+            </p>
+            <div className="max-w-6xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/images/generated/cross-section-infographic.webp"
+                  alt="Geological deposit cross-section — 8 core samples, iron oxide cap, transition zone, sulfide zone, porphyry target"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto"
+                  sizes="100vw"
+                />
+              </div>
+              <p className="text-white/30 text-xs text-center mt-4 italic">
+                Based on SGECS geological assessment filed with MGB Region XI, June 2025
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 4 — THE VALIDATION                                   */}
+        {/* evidence-portfolio — 9 laboratories, 5 countries              */}
+        {/* ============================================================ */}
+        <section data-section="3" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
+          <div className="content-wrapper w-full py-16">
+            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-4">
+              The Validation
+            </h2>
+            <p className="text-white/40 text-lg text-center mb-10 max-w-2xl mx-auto">
+              No single result is load-bearing. The portfolio is self-corroborating.
+            </p>
+            <div className="max-w-6xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/images/generated/evidence-portfolio.webp"
+                  alt="Nine laboratories across five countries — POSCO 67.31% Fe, Intertek 136 samples, Beijing BGRIMM 20.72% Cu, Davao Analytical 39.5% Cu, HK Imperial 120,000 WMT, Ostrea 13.77 g/t Au, CCIC, SGS, Lab Uji Kimia"
+                  width={1920}
+                  height={1080}
+                  className="w-full h-auto"
+                  sizes="100vw"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 5 — THE ALIGNMENT                                    */}
+        {/* partnership-ecosystem — GMC + Partner capabilities            */}
+        {/* ============================================================ */}
+        <section data-section="4" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
           <div className="content-wrapper w-full py-16">
             <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-10">
               The Alignment
@@ -261,37 +318,10 @@ export default function PresentationPage() {
         </section>
 
         {/* ============================================================ */}
-        {/* SECTION 4 — THE PROOF                                        */}
-        {/* cross-section-infographic.png fills viewport                  */}
-        {/* ============================================================ */}
-        <section data-section="3" className="min-h-screen flex items-center justify-center snap-start bg-[#0C1926] relative">
-          <div className="content-wrapper w-full py-16">
-            <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white text-center mb-10">
-              The Proof
-            </h2>
-            <div className="max-w-6xl mx-auto">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/generated/cross-section-infographic.webp"
-                  alt="Geological deposit cross-section — 8 core samples, iron oxide cap, transition zone, sulfide zone, porphyry target"
-                  width={1920}
-                  height={1080}
-                  className="w-full h-auto"
-                  sizes="100vw"
-                />
-              </div>
-              <p className="text-white/30 text-xs text-center mt-4 italic">
-                Based on SGECS geological assessment filed with MGB Region XI, June 2025
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================================ */}
-        {/* SECTION 5 — THE PLAN                                         */}
+        {/* SECTION 6 — THE PLAN                                         */}
         {/* 5-phase timeline with decision gates                         */}
         {/* ============================================================ */}
-        <section data-section="4" className="min-h-screen flex items-center snap-start bg-white">
+        <section data-section="5" className="min-h-screen flex items-center snap-start bg-white">
           <div className="content-wrapper w-full py-16">
             <h2 className="font-playfair text-3xl md:text-5xl font-bold text-text-primary text-center mb-16">
               The Plan
@@ -358,10 +388,10 @@ export default function PresentationPage() {
         </section>
 
         {/* ============================================================ */}
-        {/* SECTION 6 — THE PROTECTION                                   */}
+        {/* SECTION 7 — THE PROTECTION                                   */}
         {/* Risk status rows on dark + topo                              */}
         {/* ============================================================ */}
-        <section data-section="5" className="min-h-screen flex items-center snap-start relative bg-[#0C1926]">
+        <section data-section="6" className="min-h-screen flex items-center snap-start relative bg-[#0C1926]">
           <Image
             src="/images/generated/topo-texture-dark.webp"
             alt=""
@@ -387,10 +417,10 @@ export default function PresentationPage() {
         </section>
 
         {/* ============================================================ */}
-        {/* SECTION 7 — THE VISION                                       */}
+        {/* SECTION 8 — THE VISION                                       */}
         {/* hero-landscape-enhanced.png full bleed                       */}
         {/* ============================================================ */}
-        <section data-section="6" className="min-h-screen flex items-center justify-center snap-start relative">
+        <section data-section="7" className="min-h-screen flex items-center justify-center snap-start relative">
           <Image
             src="/images/generated/hero-landscape-enhanced.webp"
             alt="Davao Oriental — tropical mountains at golden hour"
@@ -411,10 +441,10 @@ export default function PresentationPage() {
         </section>
 
         {/* ============================================================ */}
-        {/* SECTION 8 — THE ASK                                          */}
+        {/* SECTION 9 — THE ASK                                          */}
         {/* Clean white, extreme negative space                          */}
         {/* ============================================================ */}
-        <section data-section="7" className="min-h-screen flex items-center snap-start bg-white">
+        <section data-section="8" className="min-h-screen flex items-center snap-start bg-white">
           <div className="content-wrapper w-full text-center py-16">
             <h2 className="font-playfair font-bold text-4xl md:text-6xl text-brand-navy mb-16">
               The Next Step
