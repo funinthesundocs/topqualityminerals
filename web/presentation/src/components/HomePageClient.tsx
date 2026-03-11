@@ -178,7 +178,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       <section className="section-padding">
         <div className="content-wrapper">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 data-aos="fade-up" className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-3">
               A Convergent Evidence Portfolio
             </h2>
@@ -257,36 +257,6 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       </section>
 
       {/* ============================================================ */}
-      {/* EVIDENCE SWIPER                                               */}
-      {/* ============================================================ */}
-      <section className="py-16 bg-bg-surface">
-        <div className="content-wrapper">
-          <Swiper
-            modules={[Autoplay]}
-            autoplay={{ delay: 2500, disableOnInteraction: false }}
-            slidesPerView={2}
-            spaceBetween={16}
-            loop
-            speed={800}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-              1280: { slidesPerView: 4 },
-            }}
-            className="evidence-swiper"
-          >
-            {evidenceItems.map((item, i) => (
-              <SwiperSlide key={i}>
-                <div className="group bg-gradient-to-b from-white to-brand-gold/20 rounded-2xl px-5 py-8 h-32 flex flex-col items-center justify-center text-center border-2 border-gray-300 shadow-md hover:border-brand-gold hover:from-brand-gold/15 hover:to-brand-gold/35 hover:shadow-[0_0_25px_rgba(197,146,46,0.25)] transition-all duration-500 cursor-pointer hover:-translate-y-1">
-                  <span className="block font-bold text-3xl text-brand-navy group-hover:text-brand-gold group-hover:drop-shadow-[0_0_10px_rgba(197,146,46,0.4)] transition-all duration-500">{item.stat}</span>
-                  <span className="block text-sm text-text-secondary mt-3 font-semibold tracking-wide group-hover:text-brand-navy transition-colors duration-300">{item.detail}</span>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>
-
       {/* ============================================================ */}
       {/* VISION BANNER                                                 */}
       {/* ============================================================ */}
