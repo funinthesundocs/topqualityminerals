@@ -176,7 +176,7 @@ export default function HomePageClient({ heroImages }: HomePageClientProps) {
       {/* ============================================================ */}
       {/* MINERALS — Gemini images ARE the cards, displayed large       */}
       {/* ============================================================ */}
-      <section className="section-padding">
+      <section className="pt-12 max-md:pt-8 pb-24 max-md:pb-16">
         <div className="content-wrapper">
           <div className="text-center mb-10">
             <h2 data-aos="fade-up" className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-3">
